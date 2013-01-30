@@ -14,8 +14,9 @@ function(app, Playlist) {
   /**
    * Search collection.
    * @constructor
-   * @event                             searchstart
-   * @event                             searchcomplete
+   * @property {String}   query
+   * @event               searchstart
+   * @event               searchcomplete
    */
   Search.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
@@ -72,7 +73,6 @@ function(app, Playlist) {
   /**
    * Search list view.
    * @constructor
-   * @property {Boolean}                used
    * @property {String}                 query
    */
   Search.Views.List = Backbone.View.extend({
@@ -83,7 +83,6 @@ function(app, Playlist) {
     serialize: function() {
         return {
             count: this.collection.length,
-            used: this.used,
             query: this.query
         };
     },
@@ -94,7 +93,6 @@ function(app, Playlist) {
     },
 
     initialize: function() {
-      this.used = false;
       this.listenTo(this.collection, {
         "reset": function() {
           this.query = this.collection.query;
@@ -102,10 +100,10 @@ function(app, Playlist) {
         },
         "searchstart": function() {
           this.disableSearch();
-          this.$("ul").html("<img src='"+app.root+"app/img/spinner.gif'>");
+          this.showSpinner();
+          this.emptyInfo();
         },
         "searchcomplete": function() {
-          this.enableSearch();
         }
       });
     },
@@ -119,13 +117,16 @@ function(app, Playlist) {
     },
     
     disableSearch: function() {
-        this.$(".searchquery").attr("disabled", "disabled");
-        this.$(".searchbutton").attr("disabled", "disabled");
+      this.$(".searchquery").attr("disabled", "disabled");
+      this.$(".searchbutton").attr("disabled", "disabled");
     },
     
-    enableSearch: function() {
-        this.$(".searchquery").removeAttr("disabled");
-        this.$(".searchbutton").removeAttr("disabled");
+    showSpinner: function() {
+      this.$("ul").html("<img src='"+app.root+"app/img/spinner.gif'>");
+    },
+    
+    emptyInfo: function() {
+      this.$(".info").empty();
     },
     
     /**

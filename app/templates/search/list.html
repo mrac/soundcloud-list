@@ -1,13 +1,13 @@
 <div class="searchbox">
-  <input class="searchquery" type="text" value="<%= query %>" placeholder="Find artists, music and audio" />
+  <input class="searchquery" type="text" value="<%= decodeURIComponent(query) %>" placeholder="Find artists, music and audio" />
   <input class="searchbutton" type="button" value="Search" />
 </div>
 
-<% if (used) { %>
+<% if (query) { %>
 <%   if (count) { %>
-<h4>Found <%= count %> tracks</h4>
+<h4 class="info">Found <%= count %> tracks</h4>
 <%   } else { %>
-<h4>No tracks found</h4>
+<h4 class="info">No tracks found</h4>
 <%   } %>
 <% } %>
 
