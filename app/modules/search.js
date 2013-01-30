@@ -56,8 +56,9 @@ function(app, Playlist) {
     tagName: "li",
     
     attributes: function() {
+      var prefixedId = Search.Views.Item.plusIdPrefix(this.model.id);
       return {
-        id: "search_" + this.model.id
+        id: prefixedId
       };
     },
     
@@ -80,6 +81,21 @@ function(app, Playlist) {
     addToPlaylist: function() {
     }    
     
+  },
+  
+  // Class properties/methods  
+  {
+    prefix: "search_",
+    
+    plusIdPrefix: function(id) {
+      var prefix = Search.Views.Item.prefix; // this?
+      return prefix+id;
+    },
+    
+    minusIdPrefix: function(id) {
+      var prefix = Search.Views.Item.prefix; // this?
+      return id.replace(new RegExp("^"+prefix), "");
+    }
   });
   
   
@@ -162,10 +178,10 @@ function(app, Playlist) {
      * eventhandler
      */
     goAdd: function(ev) {
-      var elemId = $(ev.currentTarget).attr("id");
-      var id = elemId.replace(/^search_/,"");
-      console.log("add track: ", id);
-      app.router.go("add", id);
+      var id = $(ev.currentTarget).attr("id");
+      var trackId = Search.Views.Item.minusIdPrefix(id);
+      console.log("add track: ", trackId);
+      app.router.go("add", trackId);
     },
     
     /**

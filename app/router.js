@@ -25,6 +25,7 @@ function(app, Playlist, Search) {
       this.playlistItems = new Playlist.Collection();
       this.initSoundCloud();
       this.setViews();
+      this.setGlobalEvents();
     },
 
     /**
@@ -61,6 +62,15 @@ function(app, Playlist, Search) {
     },
     
     /**
+     * Set global events.
+     */
+    setGlobalEvents: function() {
+      this.listenTo(app, {
+        "global:remove": this.goRemove
+      });
+    },
+    
+    /**
      * action
      */
     index: function() {
@@ -80,7 +90,7 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     add: function(trackId) {
-      this.playlistItems.addTrack(trackId);
+      this.playlistItems.addById(trackId);
     },
     
     /**
@@ -88,8 +98,16 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     remove: function(trackId) {
-      this.playlistItems.removeTrack(trackId);
+      this.playlistItems.removeById(trackId);
     },
+    
+    /**
+     * global eventhandler
+     */
+    goRemove: function(model) {
+      var trackId = model.id;
+      app.router.go("remove", trackId);
+    }
     
   });
 

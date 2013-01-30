@@ -27,27 +27,31 @@ function(app) {
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
     
-    initialize: function(models, options) {
+    /**
+     * Fetch track from SoundCloud by track id and add it to the collection.
+     */
+    addById: function(trackId) {
+      SC.get('/tracks/'+trackId, {}, function(tracks, err) {
+        if(!err) {
+          this.add(tracks);
+        } else {
+          console.log("Error while getting a track from SoundCloud: ", err);
+          this.trigger("adderror");
+        }
+      }.bind(this));
+      
+      this.trigger("addstart");
     },
     
-    addTrack: function(trackId) {
-        // Fetch track from sound cloud and add it to the collection
-        SC.get('/tracks/'+trackId, {}, function(tracks, err) {
-          if(!err) {
-            this.add(tracks);
-          } else {
-            console.log("Error while getting a track from SoundCloud: ", err);
-            this.trigger("adderror");
-          }
-        }.bind(this));
-        
-        this.trigger("addstart");
-    },
-    
-    removeTrack: function(trackId) {
-      var modelsToRemove = this.where({id: trackId});
-      this.remove(modelsToRemove);
+    /**
+     * Remove track from the collection by track id.
+     */
+    removeById: function(trackId) {
+      var trackIdNumber = parseInt(trackId, 10);
+      var tracks = this.where({id: trackIdNumber});
+      this.remove(tracks);
     }
+    
   });
 
   
@@ -67,35 +71,20 @@ function(app) {
       };
     },
     
+    // Define global events to make them bubble up.
     events: {
-        "click .remove": "removeFromPlaylist",
-        "click .moveup": "moveUp",
-        "click .movedown": "moveDown"
-    },
+        "click .remove": function() {
+          app.trigger("global:remove", this.model);
+        },
+        "click .moveup": function() {
+          app.trigger("global:moveUp", this.model);
+        },
+        "click .movedown": function() {
+          app.trigger("global:moveDown", this.model);
+        }
+    }
     
-    beforeRender: function() {
-    },
-    
-    /**
-     * eventhandler
-     */
-    removeFromPlaylist: function() {
-    },
-    
-    /**
-     * eventhandler
-     */
-    moveUp: function() {
-    },
-    
-    /**
-     * eventhandler
-     */
-    moveDown: function() {
-    }    
-    
-  });
-  
+  });  
   
   
   /**
@@ -114,6 +103,8 @@ function(app) {
     },
     
     initialize: function() {
+      
+      // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": this.render,
         "add": this.render,
@@ -121,6 +112,7 @@ function(app) {
         "fetch": function() {
         }
       });
+      
     },
     
     beforeRender: function() {
@@ -129,7 +121,24 @@ function(app) {
           model: track
         }));
       }, this);
+    },
+        
+    moveUp: function(model) {
+      var index = this.indexOf(model);
+      if(index > 0) {
+        this.remove(model, {silent: true});
+        this.add(model, {at: index-1, silent: true});
+      }
+    },
+    
+    moveDown: function(model) {
+      var index = this.indexOf(model);
+      if (index < this.models.length) {
+        this.remove(model, {silent: true});
+        this.add(model, {at: index+1, silent: true});
+      }
     }
+    
     
   });
 

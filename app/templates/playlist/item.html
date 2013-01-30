@@ -1,2 +1,11 @@
-<span class="title"><%= model.get("title") %></span>
-<span class="user">- <%= model.get("user").permalink %></span>
+<div class="item wrapper">
+    <div class="track left">
+        <span class="title"><%= model.get("title") %></span>
+        <span class="user">- <%= model.get("user").permalink %></span>
+    </div>
+    <div class="buttons right">
+        <input class="moveup" type="button" value="Up" />
+        <input class="movedown" type="button" value="Down" />
+        <input class="remove" type="button" value="Remove" />
+    </div>
+</div>

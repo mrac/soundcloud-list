@@ -32,14 +32,40 @@ ul.playlist {
 }
 
 ul.playlist > li {
+    width: 100%;
     list-style-type: none;
     cursor: pointer;
 }
 
-ul.playlist > li > .title {
+ul.playlist > li .item {
+    height: 26px;
 }
 
-ul.playlist > li > .user {
+ul.playlist > li .track {
+}
+
+ul.playlist > li .buttons {
+    text-align: right;
+    padding: 0px 10px 0px 10px;
+}
+
+ul.playlist > li .title {
+}
+
+ul.playlist > li .user {
     color: #a0a0a0;
     font-size: 90%;
+}
+
+.wrapper {
+    position: relative;
+}
+.right, .left {
+    position: absolute;
+}
+.right{
+    right: 0;
+}
+.left {
+    left: 0;
 }
