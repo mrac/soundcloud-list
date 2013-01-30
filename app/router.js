@@ -72,7 +72,7 @@ function(app, Playlist, Search) {
      * @param {String} searchQuery
      */
     search: function(searchQuery) {
-      this.searchItems.search(searchQuery);
+      this.searchItems.search(decodeURIComponent(searchQuery));
     },
     
     /**
