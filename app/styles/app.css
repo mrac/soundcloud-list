@@ -19,6 +19,10 @@ ul.searchlist > li {
     cursor: pointer;
 }
 
+ul.searchlist > li .item {
+    height: 26px;
+}
+
 ul.searchlist > li > .title {
 }
 

@@ -66,7 +66,8 @@ function(app, Playlist, Search) {
      */
     setGlobalEvents: function() {
       this.listenTo(app, {
-        "global:remove": this.goRemove
+        "global:remove": this.goRemove,
+        "global:add": this.goAdd
       });
     },
     
@@ -105,9 +106,16 @@ function(app, Playlist, Search) {
      * global eventhandler
      */
     goRemove: function(model) {
-      var trackId = model.id;
-      app.router.go("remove", trackId);
+      app.router.go("remove", model.id);
+    },
+    
+    /**
+     * global eventhandler
+     */
+    goAdd: function(model) {
+      app.router.go("add", model.id);
     }
+    
     
   });
 

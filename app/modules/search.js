@@ -55,47 +55,19 @@ function(app, Playlist) {
     
     tagName: "li",
     
-    attributes: function() {
-      var prefixedId = Search.Views.Item.plusIdPrefix(this.model.id);
-      return {
-        id: prefixedId
-      };
-    },
-    
     serialize: function() {
       return {
         model: this.model
       };
     },
     
+    // Define global events to make them bubble up.
     events: {
-        "click .add": "addToPlaylist"
-    },
-    
-    beforeRender: function() {
-    },
-    
-    /**
-     * eventhandler
-     */
-    addToPlaylist: function() {
-    }    
-    
-  },
-  
-  // Class properties/methods  
-  {
-    prefix: "search_",
-    
-    plusIdPrefix: function(id) {
-      var prefix = Search.Views.Item.prefix; // this?
-      return prefix+id;
-    },
-    
-    minusIdPrefix: function(id) {
-      var prefix = Search.Views.Item.prefix; // this?
-      return id.replace(new RegExp("^"+prefix), "");
+        "click .track": function() {
+          app.trigger("global:add", this.model);
+        },
     }
+    
   });
   
   
@@ -122,8 +94,7 @@ function(app, Playlist) {
     
     events: {
         "click .searchbutton": "goSearch",
-        "keydown .searchquery": "enterKey",
-        "click .searchlist > li": "goAdd"
+        "keydown .searchquery": "enterKey"
     },
 
     initialize: function() {
@@ -172,16 +143,6 @@ function(app, Playlist) {
     goSearch: function() {
       this.query = this.$(".searchquery").val();
       app.router.go("search", this.query);
-    },
-    
-    /**
-     * eventhandler
-     */
-    goAdd: function(ev) {
-      var id = $(ev.currentTarget).attr("id");
-      var trackId = Search.Views.Item.minusIdPrefix(id);
-      console.log("add track: ", trackId);
-      app.router.go("add", trackId);
     },
     
     /**
