@@ -6,7 +6,7 @@ define([
   // creation.
   var app = {
     // The root path to run the application.
-    root: "/"
+    root: "/soundcloud-list/"
   };
 
   // Localize or create a new JavaScript Template object.
