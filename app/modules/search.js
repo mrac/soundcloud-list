@@ -14,12 +14,15 @@ function(app, Playlist) {
   /**
    * Search collection.
    * @constructor
-   * @property {String}   query
    * @event               searchstart
    * @event               searchcomplete
    */
   Search.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
+    
+    defaults: {
+      query: ""  
+    },
     
     initialize: function(models, options) {
     },
@@ -73,12 +76,15 @@ function(app, Playlist) {
   /**
    * Search list view.
    * @constructor
-   * @property {String}                 query
    */
   Search.Views.List = Backbone.View.extend({
     template: "search/list",
     
     className: "search-container",
+    
+    defaults: {
+      query: ""
+    },
     
     serialize: function() {
         return {
