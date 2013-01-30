@@ -10,10 +10,20 @@ function(app) {
   
   
   /**
+   * Track model.
+   * @constructor
+   */
+  Playlist.Track = Backbone.Model.extend({
+  });
+
+
+
+  /**
    * Playlist collection.
    * @constructor
    */
   Playlist.Collection = Backbone.Collection.extend({
+    model: Playlist.Track,
     initialize: function(models, options) {
     }    
   });

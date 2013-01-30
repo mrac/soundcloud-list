@@ -16,6 +16,7 @@ function(app, Playlist) {
    * @constructor
    */
   Search.Collection = Backbone.Collection.extend({
+    model: Playlist.Track,
     initialize: function(models, options) {
     }    
   });
@@ -71,7 +72,8 @@ function(app, Playlist) {
     },
     
     events: {
-        "click .searchbutton": "search"
+        "click .searchbutton": "search",
+        "keydown .searchquery": "enterkey"
     },
     
     initialize: function() {
@@ -85,16 +87,39 @@ function(app, Playlist) {
     },
     
     beforeRender: function() {
-      this.options.searchItems.each(function(searchItem) {
+      this.options.searchItems.each(function(track) {
         this.insertView("ul", new Search.Views.Item({
-          model: searchItem
+          model: track
         }));
-      });
+      }, this);
     },
     
     search: function() {
-        alert("Search");
-        this.trigger("search");
+        var searchQuery = this.$(".searchquery").val();
+        SC.get('/tracks', { q: searchQuery }, function(tracks) {
+          console.log(tracks);
+          this.trigger("searchcomplete");
+          this.options.searchItems.reset(tracks);
+          this.enableSearch();
+        }.bind(this));
+        this.trigger("searchstart");
+        this.disableSearch();
+    },
+ 
+    enterkey: function(e) {
+        if (e.keyCode === 13) {
+            this.search();
+        }
+    },
+    
+    disableSearch: function() {
+        this.$(".searchquery").attr("disabled", "disabled");
+        this.$(".searchbutton").attr("disabled", "disabled");
+    },
+    
+    enableSearch: function() {
+        this.$(".searchquery").removeAttr("disabled");
+        this.$(".searchbutton").removeAttr("disabled");
     }
     
   });

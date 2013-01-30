@@ -8,7 +8,7 @@ define([
 
 ],
 
-function(app) {
+function(app, Playlist, Search) {
 
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
