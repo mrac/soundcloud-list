@@ -51,17 +51,26 @@ function(app) {
         "click .movedown": "moveDown"
     },
     
+    beforeRender: function() {
+    },
+    
+    /**
+     * eventhandler
+     */
     removeFromPlaylist: function() {
     },
     
+    /**
+     * eventhandler
+     */
     moveUp: function() {
     },
     
+    /**
+     * eventhandler
+     */
     moveDown: function() {
-    },
-    
-    beforeRender: function() {
-    }
+    }    
     
   });
   
@@ -70,7 +79,6 @@ function(app) {
   /**
    * Playlist list view.
    * @constructor
-   * @property {Backbone.Collection} options.playlistItems
    */
   Playlist.Views.List = Backbone.View.extend({
     template: "playlist/list",
@@ -79,12 +87,12 @@ function(app) {
     
     serialize: function() {
         return {
-            count: this.options.playlistItems.length
+            count: this.collection.length
         };
     },
     
     initialize: function() {
-      this.listenTo(this.options.playlistItems, {
+      this.listenTo(this.collection, {
         "reset": this.render,
         "fetch": function() {
         }
@@ -92,9 +100,9 @@ function(app) {
     },
     
     beforeRender: function() {
-      this.options.playlistItems.each(function(playlistItem) {
+      this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
-          model: playlistItem
+          model: track
         }));
       });
     }

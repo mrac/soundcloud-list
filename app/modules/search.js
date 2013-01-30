@@ -14,11 +14,25 @@ function(app, Playlist) {
   /**
    * Search collection.
    * @constructor
+   * @event                             searchstart
+   * @event                             searchcomplete
    */
   Search.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
+    
     initialize: function(models, options) {
-    }    
+    },
+    
+    search: function(searchQuery) {
+        this.query = searchQuery;
+        SC.get('/tracks', { q: searchQuery }, function(tracks) {
+          console.log(tracks);
+          this.trigger("searchcomplete");
+          this.reset(tracks);
+        }.bind(this));
+        this.trigger("searchstart");
+    }
+    
   });
 
   
@@ -42,11 +56,14 @@ function(app, Playlist) {
         "click .add": "addToPlaylist"
     },
     
-    addToPlaylist: function() {
+    beforeRender: function() {
     },
     
-    beforeRender: function() {
-    }
+    /**
+     * eventhandler
+     */
+    addToPlaylist: function() {
+    }    
     
   });
   
@@ -55,9 +72,8 @@ function(app, Playlist) {
   /**
    * Search list view.
    * @constructor
-   * @property {Backbone.Collection}    options.searchItems
    * @property {Boolean}                used
-   * @event                             search
+   * @property {String}                 query
    */
   Search.Views.List = Backbone.View.extend({
     template: "search/list",
@@ -66,50 +82,40 @@ function(app, Playlist) {
     
     serialize: function() {
         return {
-            count: this.options.searchItems.length,
-            used: this.used
+            count: this.collection.length,
+            used: this.used,
+            query: this.query
         };
     },
     
     events: {
-        "click .searchbutton": "search",
-        "keydown .searchquery": "enterkey"
+        "click .searchbutton": "goSearch",
+        "keydown .searchquery": "enterKey"
     },
-    
+
     initialize: function() {
       this.used = false;
-      this.listenTo(this.options.searchItems, {
-        "reset": this.render,
-        "fetch": function() {
-          this.$("ul").parent().html("<img src='app/img/spinner.gif'>");
+      this.listenTo(this.collection, {
+        "reset": function() {
+          this.query = this.collection.query;
+          this.render();
+        },
+        "searchstart": function() {
+          this.disableSearch();
+          this.$("ul").html("<img src='"+app.root+"app/img/spinner.gif'>");
+        },
+        "searchcomplete": function() {
+          this.enableSearch();
         }
       });
     },
     
     beforeRender: function() {
-      this.options.searchItems.each(function(track) {
+      this.collection.each(function(track) {
         this.insertView("ul", new Search.Views.Item({
           model: track
         }));
       }, this);
-    },
-    
-    search: function() {
-        var searchQuery = this.$(".searchquery").val();
-        SC.get('/tracks', { q: searchQuery }, function(tracks) {
-          console.log(tracks);
-          this.trigger("searchcomplete");
-          this.options.searchItems.reset(tracks);
-          this.enableSearch();
-        }.bind(this));
-        this.trigger("searchstart");
-        this.disableSearch();
-    },
- 
-    enterkey: function(e) {
-        if (e.keyCode === 13) {
-            this.search();
-        }
     },
     
     disableSearch: function() {
@@ -120,6 +126,23 @@ function(app, Playlist) {
     enableSearch: function() {
         this.$(".searchquery").removeAttr("disabled");
         this.$(".searchbutton").removeAttr("disabled");
+    },
+    
+    /**
+     * eventhandler
+     */
+    goSearch: function() {
+      this.query = this.$(".searchquery").val();
+      app.router.go("search", this.query);
+    },
+    
+    /**
+     * eventhandler
+     */
+    enterKey: function(e) {
+        if (e.keyCode === 13) {
+            this.goSearch();
+        }
     }
     
   });
