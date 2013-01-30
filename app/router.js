@@ -22,7 +22,7 @@ function(app) {
 
     initSoundCloud: function() {
       SC.initialize({
-        client_id: "6d6kei19bmrac"
+        client_id: "YOUR_CLIENT_ID"
       });
     }
   });
