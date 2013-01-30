@@ -1,6 +1,11 @@
 define([
   // Application.
-  "app"
+  "app",
+
+  // Modules.
+  "modules/playlist",
+  "modules/search"
+
 ],
 
 function(app) {
@@ -14,10 +19,33 @@ function(app) {
     initialize: function() {
       // Initialize SoundCloud SDK
       this.initSoundCloud();
+      
+      // Set up collections
+      this.searchItems = new Search.Collection();
+      this.playlistItems = new Playlist.Collection();
+
+      // Use main layout and set views
+      app.useLayout("main-layout")
+      .setViews({
+        ".search-container": new Search.Views.List({
+          searchItems: this.searchItems
+        }),
+        ".playlist-container": new Playlist.Views.List({
+          playlistItems: this.playlistItems
+        })
+      })
+      .render();
     },
 
     index: function() {
+      this.reset();
+    },
 
+    reset: function() {
+      // Reset search items to initial state
+      if(this.searchItems.length) {
+        this.searchItems.reset();
+      }
     },
 
     initSoundCloud: function() {
@@ -26,6 +54,8 @@ function(app) {
       });
     }
   });
+
+  
 
   return Router;
 
