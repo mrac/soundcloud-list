@@ -108,6 +108,7 @@ function(app, Playlist) {
           this.disableSearch();
           this.showSpinner();
           this.emptyInfo();
+          this.updateSearchbox(this.collection.query);
         },
         "searchcomplete": function() {
         }
@@ -133,6 +134,10 @@ function(app, Playlist) {
     
     emptyInfo: function() {
       this.$(".info").empty();
+    },
+    
+    updateSearchbox: function(query) {
+      this.$(".searchquery").val(query);
     },
     
     /**
