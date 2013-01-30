@@ -80,7 +80,7 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     add: function(trackId) {
-      this.playlistItems.add(trackId);
+      this.playlistItems.addTrack(trackId);
     },
     
     /**
@@ -88,7 +88,7 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     remove: function(trackId) {
-      this.playlistItems.remove(trackId);
+      this.playlistItems.removeTrack(trackId);
     },
     
   });

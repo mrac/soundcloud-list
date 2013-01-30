@@ -21,11 +21,33 @@ function(app) {
   /**
    * Playlist collection.
    * @constructor
+   * @event               addstart
+   * @event               adderror
    */
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
+    
     initialize: function(models, options) {
-    }    
+    },
+    
+    addTrack: function(trackId) {
+        // Fetch track from sound cloud and add it to the collection
+        SC.get('/tracks/'+trackId, {}, function(tracks, err) {
+          if(!err) {
+            this.add(tracks);
+          } else {
+            console.log("Error while getting a track from SoundCloud: ", err);
+            this.trigger("adderror");
+          }
+        }.bind(this));
+        
+        this.trigger("addstart");
+    },
+    
+    removeTrack: function(trackId) {
+      var modelsToRemove = this.where({id: trackId});
+      this.remove(modelsToRemove);
+    }
   });
 
   
@@ -94,6 +116,8 @@ function(app) {
     initialize: function() {
       this.listenTo(this.collection, {
         "reset": this.render,
+        "add": this.render,
+        "remove": this.render,
         "fetch": function() {
         }
       });
@@ -104,7 +128,7 @@ function(app) {
         this.insertView("ul", new Playlist.Views.Item({
           model: track
         }));
-      });
+      }, this);
     }
     
   });

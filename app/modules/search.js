@@ -14,25 +14,30 @@ function(app, Playlist) {
   /**
    * Search collection.
    * @constructor
+   * @property {String}   query
    * @event               searchstart
-   * @event               searchcomplete
+   * @event               search
+   * @event               searcherror
    */
   Search.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
-    
-    defaults: {
-      query: ""  
-    },
     
     initialize: function(models, options) {
     },
     
     search: function(searchQuery) {
+        var pageSize = 10;
         this.query = searchQuery;
-        SC.get('/tracks', { q: searchQuery }, function(tracks) {
-          console.log(tracks);
-          this.trigger("searchcomplete");
-          this.reset(tracks);
+        SC.get('/tracks', { q: searchQuery, limit: pageSize }, function(tracks, err) {
+          if(!err) {
+            console.log(tracks);
+            this.trigger("search");
+            this.reset(tracks);
+          } else {
+            console.log("Error while getting a list of tracks from SoundCloud: ", err);
+            this.trigger("searcherror");
+            this.reset();
+          }
         }.bind(this));
         this.trigger("searchstart");
     }
@@ -49,6 +54,12 @@ function(app, Playlist) {
     template: "search/item",
     
     tagName: "li",
+    
+    attributes: function() {
+      return {
+        id: "search_" + this.model.id
+      };
+    },
     
     serialize: function() {
       return {
@@ -95,7 +106,8 @@ function(app, Playlist) {
     
     events: {
         "click .searchbutton": "goSearch",
-        "keydown .searchquery": "enterKey"
+        "keydown .searchquery": "enterKey",
+        "click .searchlist > li": "goAdd"
     },
 
     initialize: function() {
@@ -109,8 +121,6 @@ function(app, Playlist) {
           this.showSpinner();
           this.emptyInfo();
           this.updateSearchbox(this.collection.query);
-        },
-        "searchcomplete": function() {
         }
       });
     },
@@ -146,6 +156,16 @@ function(app, Playlist) {
     goSearch: function() {
       this.query = this.$(".searchquery").val();
       app.router.go("search", this.query);
+    },
+    
+    /**
+     * eventhandler
+     */
+    goAdd: function(ev) {
+      var elemId = $(ev.currentTarget).attr("id");
+      var id = elemId.replace(/^search_/,"");
+      console.log("add track: ", id);
+      app.router.go("add", id);
     },
     
     /**
