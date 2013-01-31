@@ -16,7 +16,6 @@ function(app, Playlist) {
    * @constructor
    * @property {String}   query
    * @event               searchstart
-   * @event               search
    * @event               searcherror
    */
   Search.Collection = Backbone.Collection.extend({
@@ -33,7 +32,7 @@ function(app, Playlist) {
           SC.get('/tracks', { q: searchQuery, limit: pageSize }, function(tracks, err) {
             if(!err) {
               console.log(tracks);
-              this.trigger("search");
+              app.trigger("global:searchcomplete", searchQuery);
               this.reset(tracks);
             } else {
               console.log("Error while getting a list of tracks from SoundCloud: ", err);
@@ -72,8 +71,9 @@ function(app, Playlist) {
     
     events: {
         // Trigger global events to make events bubble up.
-        "click .track": function() {
+        "click": function(ev) {
           app.trigger("global:add", this.model);
+          ev.stopPropagation();
         },
     }
     
@@ -117,6 +117,14 @@ function(app, Playlist) {
           this.showSpinner();
           this.emptyInfo();
           this.updateSearchbox(this.collection.query);
+        },
+        "remove": this.render
+      });
+      
+      // Listen to global events.
+      this.listenTo(app, {
+        "global:addcomplete": function(track) {
+          this.collection.remove(track);
         }
       });
     },

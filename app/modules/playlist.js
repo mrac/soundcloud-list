@@ -61,6 +61,7 @@ function(app) {
           if(track) {
             track = new Playlist.Track(track);
             this.add(track);
+            app.trigger("global:addcomplete", track);
             track.save();
           }
         } else {
@@ -125,6 +126,7 @@ function(app) {
     },
     
     play: function(track) {
+      console.log("PLAY track:", track);
     }
     
   });
@@ -149,18 +151,21 @@ function(app) {
     
     events: {
         // Trigger global events to make events bubble up.
-        "click .remove": function() {
+        "click .remove": function(ev) {
           app.trigger("global:remove", this.model);
+          ev.stopPropagation();
         },
         
         // Execute collection methods.
-        "click .moveup": function() {
+        "click .moveup": function(ev) {
           this.model.collection.moveUp(this.model);
+          ev.stopPropagation();
         },
-        "click .movedown": function() {
+        "click .movedown": function(ev) {
           this.model.collection.moveDown(this.model);
+          ev.stopPropagation();
         },
-        "click .track": function() {
+        "click": function() {
           this.model.collection.play(this.model);
         }
     }
