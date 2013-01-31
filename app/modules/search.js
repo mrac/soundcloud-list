@@ -32,7 +32,6 @@ function(app, Playlist) {
           // Fetch soundcloud tracks and update the collection, if query is not empty.
           SC.get('/tracks', { q: searchQuery, limit: pageSize }, function(tracks, err) {
             if(!err) {
-              console.log(tracks);
               app.trigger("global:searchcomplete", searchQuery);
               this.reset(tracks);
             } else {

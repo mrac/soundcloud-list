@@ -34,8 +34,8 @@ function(app) {
     },
     
     initialize: function() {
-      if(!this.attributes.customOrder) {
-        this.attributes.customOrder = Playlist.Track.getUniqueId();
+      if(!this.get("customOrder")) {
+        this.set("customOrder", Playlist.Track.getUniqueId());
       }
       
       // Handle local events
@@ -51,24 +51,24 @@ function(app) {
      * eventhandler
      */
     playon: function() {
-      this.attributes.paused = false;
-      this.attributes.playing = true;
+      this.set("paused", false);
+      this.set("playing", true);
     },
     
     /**
      * eventhandler
      */
     pause: function() {
-      this.attributes.playing = false;
-      this.attributes.paused = true;
+      this.set("playing", false);
+      this.set("paused", true);
     },
 
     /**
      * eventhandler
      */
     playoff: function() {
-      this.attributes.playing = false;
-      this.attributes.paused = false;
+      this.set("playing", false);
+      this.set("paused", false);
     }
     
   }, {
