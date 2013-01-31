@@ -14,12 +14,14 @@ function(app, Playlist, Search) {
   var Router = Backbone.Router.extend({
     
     routes: {
+      // states
       "": "index",
       "search/(:query)": "search",
-      "add/:track": "add",
-      "remove/:track": "remove",
       "play/:track": "play",
-      "pause/:track": "pause"
+      "pause/:track": "pause",
+      
+      // actions
+      "add/:track": "add"
     },
 
     initialize: function() {
@@ -74,7 +76,6 @@ function(app, Playlist, Search) {
      */
     setGlobalEvents: function() {
       this.listenTo(app, {
-        "global:remove": this.goRemove,
         "global:play": this.goPlay,
         "global:pause": this.goPause,
         "global:addTrack": this.addTrack
@@ -89,19 +90,35 @@ function(app, Playlist, Search) {
     },
     
     /**
-     * action
+     * state
      */
     index: function() {
       this.searchItems.reset();
     },
     
     /**
-     * action
+     * state
      * @param {String} searchQuery
      */
     search: function(searchQuery) {
       searchQuery = searchQuery || "";
       this.searchItems.search(decodeURIComponent(searchQuery));
+    },
+    
+    /**
+     * state
+     * @param {String} trackId
+     */
+    play: function(trackId) {
+      this.playlistItems.playById(trackId);
+    },
+    
+    /**
+     * state
+     * @param {String} trackId
+     */
+    pause: function(trackId) {
+      this.playlistItems.pauseById(trackId);
     },
     
     /**
@@ -113,37 +130,6 @@ function(app, Playlist, Search) {
       this.go("");
     },
     
-    /**
-     * action
-     * @param {String} trackId
-     */
-    remove: function(trackId) {
-      this.playlistItems.removeById(trackId);
-    },
-    
-    /**
-     * action
-     * @param {String} trackId
-     */
-    play: function(trackId) {
-      this.playlistItems.playById(trackId);
-    },
-    
-    /**
-     * action
-     * @param {String} trackId
-     */
-    pause: function(trackId) {
-      this.playlistItems.pauseById(trackId);
-    },
-    
-    /**
-     * global eventhandler
-     */
-    goRemove: function(track) {
-      app.router.go("remove", track.id);
-    },
-        
     /**
      * global eventhandler
      */

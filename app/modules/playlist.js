@@ -146,16 +146,6 @@ function(app) {
         }
       }.bind(this));
     },
-
-    /**
-     * Remove track from the collection by track id.
-     */
-    removeById: function(trackId) {
-      var track = this.getTrackFromId(trackId);
-      if(track) {
-        track.destroy();
-      }
-    },
     
     /**
      * Replay SoundCloud track by id.
@@ -349,14 +339,11 @@ function(app) {
     },
     
     events: {
-        // Trigger global events to make events bubble up.
+        "click": "triggerGlobalPlayPause",
         "click .remove": function(ev) {
-          app.trigger("global:remove", this.model);
+          this.model.destroy();
           ev.stopPropagation();
         },
-        "click": "triggerGlobalPlayPause",
-        
-        // Execute collection methods.
         "click .moveup": function(ev) {
           this.model.collection.moveUp(this.model);
           ev.stopPropagation();
