@@ -7,6 +7,16 @@
     font-family: Interstate, 'Lucida Grande', Helvetica, Arial, sans-serif;    
 }
 
+#main div {
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
+}
+
 hr {
 }
 
@@ -110,10 +120,10 @@ ul.playlist > li .item.playing:hover {
 }
 
 ul.playlist > li .item.paused {
-    background-color: #f0a0a0;
+    background-color: #ffa090;
 }
 ul.playlist > li .item.paused:hover {
-    background-color: #e09090;
+    background-color: #ff9080;
 }
 
 ul.playlist > li .item:hover img {
@@ -159,3 +169,4 @@ ul.playlist > li .user {
 .hidden {
     display: none;
 }
+
