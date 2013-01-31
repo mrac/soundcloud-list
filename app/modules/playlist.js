@@ -24,13 +24,14 @@ function(app) {
       }
     }
   }, {
-    // Class methods
+    // Class members
     getUniqueId: (function() {
       var uniqueId = 0;
       return function() {
         return (Date.now() + (uniqueId++)).toString(26);
       };
-    })()
+    })(),
+    defaultThumbnail: app.root + "app/img/orange_white_40-94fc761.png"
   });
 
 
@@ -121,7 +122,10 @@ function(app) {
         this.sort();
         this.trigger("move");
       }
-    }    
+    },
+    
+    play: function(track) {
+    }
     
   });
 
@@ -138,7 +142,8 @@ function(app) {
     
     serialize: function() {
       return {
-        model: this.model
+        model: this.model,
+        defaultThumbnail: Playlist.Track.defaultThumbnail
       };
     },
     
@@ -154,6 +159,9 @@ function(app) {
         },
         "click .movedown": function() {
           this.model.collection.moveDown(this.model);
+        },
+        "click .track": function() {
+          this.model.collection.play(this.model);
         }
     }
     
@@ -197,7 +205,7 @@ function(app) {
         }));
       }, this);
     }
-    
+
   });
 
     

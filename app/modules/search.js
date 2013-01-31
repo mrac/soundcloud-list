@@ -65,7 +65,8 @@ function(app, Playlist) {
     
     serialize: function() {
       return {
-        model: this.model
+        model: this.model,
+        defaultThumbnail: Playlist.Track.defaultThumbnail
       };
     },
     

@@ -6,8 +6,28 @@
     padding: 30px;
 }
 
+hr {
+}
+
+h2.title {
+    margin: 10px 0 10px 0;
+}
+
+h4 {
+    margin: 5px 0 5px 0;
+}
+
+img.thumbnail {
+   width: 40px;
+   margin-right: 5px;
+}
+
+.search-container {
+    margin-bottom: 24px;
+}
+
 .searchbox {
-    margin: 10px 0px 10px 0px;
+    margin: 20px 0px 13px 0px;
 }
 
 ul.searchlist {
@@ -20,7 +40,18 @@ ul.searchlist > li {
 }
 
 ul.searchlist > li .item {
-    height: 26px;
+    background-color: #f6f6f6;
+    height: 40px;
+    margin-bottom: 3px;
+    border: 1px solid #e0e0e0;
+}
+
+ul.searchlist > li .item:hover {
+    background-color: #e0e0e0;
+}
+
+ul.searchlist > li .item:hover img {
+    opacity: 0.5;
 }
 
 ul.searchlist > li .title {
@@ -29,6 +60,10 @@ ul.searchlist > li .title {
 ul.searchlist > li .user {
     color: #a0a0a0;
     font-size: 90%;
+}
+
+.playlist-container {
+    margin-bottom: 28px;
 }
 
 ul.playlist {
@@ -42,11 +77,23 @@ ul.playlist > li {
 }
 
 ul.playlist > li .item {
-    height: 26px;
+    background-color: #f6f0e6;
+    height: 40px;
+    margin-bottom: 3px;
+    border: 1px solid #e0dad0;
+}
+
+ul.playlist > li .item:hover {
+    background-color: #e0dad0;
+}
+
+ul.playlist > li .item:hover img {
+    opacity: 0.5;
 }
 
 ul.playlist > li .track {
 }
+
 
 ul.playlist > li .buttons {
     text-align: right;

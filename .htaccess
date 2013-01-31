@@ -1,7 +1,7 @@
 RewriteEngine On
 # not a file or directory
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
 # example.com/home => example.com/#home
-RewriteRule ^(.*)$ /soundcloud-list/#$1 [L,NC,R,NE]
+#RewriteRule ^(.*)$ /soundcloud-list/#$1 [L,NC,R,NE]
 

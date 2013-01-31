@@ -1,5 +1,10 @@
 <div class="item wrapper">
     <div class="track left">
+        <% if(model.get("artwork_url")) { %>
+        <img class="thumbnail" src="<%= model.get("artwork_url") %>" />
+        <% } else { %>
+        <img class="thumbnail" src="<%= defaultThumbnail %>" />
+        <% } %>
         <span class="title"><%= model.get("title") %></span>
         <span class="user">- <%= model.get("user").permalink %></span>
     </div>
