@@ -264,7 +264,7 @@ footer {
     /* rules that only apply for canvases narrower than 1000px */
     
     ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
+        background-color: #f0f0f0;
     }
     ul.searchlist > li .item:hover img {
         opacity: 1;
@@ -276,7 +276,7 @@ footer {
     /* rules for iPad in landscape orientation */
     
     ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
+        background-color: #f0f0f0;
     }
     ul.searchlist > li .item:hover img {
         opacity: 1;
@@ -292,7 +292,7 @@ footer {
     }
     
     ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
+        background-color: #f0f0f0;
     }
     ul.searchlist > li .item:hover img {
         opacity: 1;
