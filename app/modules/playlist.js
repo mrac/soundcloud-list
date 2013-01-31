@@ -188,7 +188,7 @@ function(app) {
     },
 
     /**
-     * Render item views.
+     * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
       this.collection.each(function(track) {

@@ -15,7 +15,7 @@ function(app, Playlist, Search) {
     
     routes: {
       "": "index",
-      "search/:query": "search",
+      "search/(:query)": "search",
       "add/:track": "add",
       "remove/:track": "remove"
     },
@@ -88,6 +88,7 @@ function(app, Playlist, Search) {
      * @param {String} searchQuery
      */
     search: function(searchQuery) {
+      searchQuery = searchQuery || "";
       this.searchItems.search(decodeURIComponent(searchQuery));
     },
     

@@ -28,18 +28,26 @@ function(app, Playlist) {
     search: function(searchQuery) {
         var pageSize = 10;
         this.query = searchQuery;
-        SC.get('/tracks', { q: searchQuery, limit: pageSize }, function(tracks, err) {
-          if(!err) {
-            console.log(tracks);
-            this.trigger("search");
-            this.reset(tracks);
-          } else {
-            console.log("Error while getting a list of tracks from SoundCloud: ", err);
-            this.trigger("searcherror");
-            this.reset();
-          }
-        }.bind(this));
-        this.trigger("searchstart");
+        if(searchQuery) {
+          // Fetch soundcloud tracks and update the collection, if query is not empty.
+          SC.get('/tracks', { q: searchQuery, limit: pageSize }, function(tracks, err) {
+            if(!err) {
+              console.log(tracks);
+              this.trigger("search");
+              this.reset(tracks);
+            } else {
+              console.log("Error while getting a list of tracks from SoundCloud: ", err);
+              this.trigger("searcherror");
+              this.reset();
+            }
+          }.bind(this));
+          this.trigger("searchstart");
+        } else {
+          // Reset the collection, if query is empty.
+          this.trigger("searchstart");
+          this.trigger("search");
+          this.reset();
+        }
     }
     
   });
@@ -92,7 +100,8 @@ function(app, Playlist) {
     events: {
         // Execute collection methods.
         "click .searchbutton": "goSearch",
-        "keydown .searchquery": "enterKey"
+        "keydown .searchquery": "enterKey",
+        "click .clearbutton": "clearButton"
     },
 
     initialize: function() {
@@ -112,7 +121,7 @@ function(app, Playlist) {
     },
     
     /**
-     * Render item views.
+     * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
       this.collection.each(function(track) {
@@ -154,7 +163,16 @@ function(app, Playlist) {
         if (ev.keyCode === 13) {
             this.goSearch();
         }
+    },
+    
+    /**
+     * eventhandler
+     */
+    clearButton: function() {
+      this.$(".searchquery").val("");
+      this.goSearch();
     }
+    
     
   });
 
