@@ -9,11 +9,15 @@
 hr {
 }
 
+img.logo {
+    margin-bottom: -15px;
+}
+
 h2.title {
-    margin: 10px 15px 10px 15px;
+    margin: 10px 10px 10px 10px;
     display: inline;
-    position: absolute;
-    top: 40px;
+    position: relative;
+    top: 14px;
 }
 
 h4 {
