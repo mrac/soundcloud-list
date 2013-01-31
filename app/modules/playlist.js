@@ -19,6 +19,7 @@ function(app) {
    * @event               playfinish
    * @event               playstop
    * @event               playing
+   * @event               playerror
    * @event               pause
    * @event               resume
    */
@@ -43,6 +44,7 @@ function(app) {
       this.on("resume", this.playon);
       this.on("playfinish", this.playoff);
       this.on("playstop", this.playoff);
+      this.on("playerror", this.pause);
     },
     
     /**
@@ -116,6 +118,7 @@ function(app) {
    * @event               playfinish
    * @event               playstop
    * @event               playing
+   * @event               playerror
    * @event               pause
    * @event               resume
    */
@@ -142,6 +145,7 @@ function(app) {
           }
         } else {
           console.log("Error while getting a track from SoundCloud: ", err);
+          alert("Error while getting a track from SoundCloud");
           this.trigger("adderror", trackId);
         }
       }.bind(this));
@@ -167,31 +171,39 @@ function(app) {
     replayById: function(trackId, doPause) {
       var thisCollection = this;
       var track = this.getTrackFromId(trackId);
-      SC.stream("/tracks/"+trackId, function(sound) {
-        // Stop currently playing track.
-        var prevTrackId = Playlist.Track.currentTrackId;
-        var prevSound = Playlist.Track.currentSound;
-        var prevTrack;
-        if(prevSound && prevTrackId) {
-          prevTrack = thisCollection.getTrackFromId(prevTrackId);
-          prevSound.stop();
-          prevTrack.trigger("playstop", trackId);
-        }
-        // Start new track.
-        Playlist.Track.currentSound = sound;
-        Playlist.Track.currentTrackId = trackId;
-        sound.play({
-          onfinish: function() {
-            track.trigger("playfinish", trackId);
-          },
-          whileplaying: function() {
-            track.trigger("playing", trackId, this.position, this.duration);
+      SC.stream("/tracks/"+trackId, function(sound, err) {
+        if(!err) {
+          // Stop currently playing track.
+          var prevTrackId = Playlist.Track.currentTrackId;
+          var prevSound = Playlist.Track.currentSound;
+          var prevTrack;
+          if(prevSound && prevTrackId) {
+            prevTrack = thisCollection.getTrackFromId(prevTrackId);
+            prevSound.stop();
+            if(prevTrack) {
+              prevTrack.trigger("playstop", trackId);
+            }
           }
-        });
-        track.trigger("play", trackId);
-        if(doPause) {
-          sound.pause();
-          track.trigger("pause", trackId);
+          // Start new track.
+          Playlist.Track.currentSound = sound;
+          Playlist.Track.currentTrackId = trackId;
+          sound.play({
+            onfinish: function() {
+              track.trigger("playfinish", trackId);
+            },
+            whileplaying: function() {
+              track.trigger("playing", trackId, this.position, this.duration);
+            }
+          });
+          track.trigger("play", trackId);
+          if(doPause) {
+            sound.pause();
+            track.trigger("pause", trackId);
+          }
+        } else {
+          console.log("Error while trying to stream a track from SoundCloud: ", err);
+          alert("Error while trying to stream a track from SoundCloud");
+          track.trigger("playerror", trackId);
         }
       });
     },

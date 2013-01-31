@@ -37,6 +37,7 @@ function(app, Playlist) {
               this.reset(tracks);
             } else {
               console.log("Error while getting a list of tracks from SoundCloud: ", err);
+              alert("Error while getting a list of tracks from SoundCloud");
               this.trigger("searcherror");
               this.reset();
             }
