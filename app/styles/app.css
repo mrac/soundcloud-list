@@ -1,10 +1,13 @@
 
+body {
+    margin: 0;
+}
+
 #main {
-    width: 700px;
     display: block;
     margin: 0px auto;
-    padding: 30px;
-    font-family: Interstate, 'Lucida Grande', Helvetica, Arial, sans-serif;    
+    padding: 1px;
+    font-family: Interstate, 'Lucida Grande', Helvetica, Arial, sans-serif;
 }
 
 #main div {
@@ -45,11 +48,47 @@ img.thumbnail {
     margin-bottom: 24px;
 }
 
-input.searchquery {
-}
-
 .searchbox {
     margin: 20px 0px 13px 0px;
+    width: 60%; /*208px;*/
+    height: 40px;
+    position: relative;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+input.searchquery {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 9px 90px 8px 9px;
+    font-size: 18px;
+    box-shadow: inset 1px 2px 4px rgba(100,100,100,.1)
+}
+
+button.searchbutton {
+    background: url('/soundcloud-list/app/img/search.png') center 9px no-repeat;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    position: absolute;
+    right: -100px;
+    top: 0;
+    padding: 0;
+    border: 0;
+    line-height: normal;
+}
+
+button.clearbutton {
+    background: url('/soundcloud-list/app/img/delete.png') center 9px no-repeat;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    position: absolute;
+    right: -60px;
+    top: 0;
+    padding: 0;
+    border: 0;
+    line-height: normal;
 }
 
 ul.searchlist {
@@ -170,3 +209,10 @@ ul.playlist > li .user {
     display: none;
 }
 
+.leftmargin {
+    margin-left: 12px;
+}
+
+footer {
+    margin-bottom: 20px;
+}

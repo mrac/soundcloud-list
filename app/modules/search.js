@@ -119,8 +119,9 @@ function(app, Playlist) {
     events: {
         // Execute collection methods.
         "click .searchbutton": "goSearch",
-        "keydown .searchquery": "enterKey",
-        "click .clearbutton": "clearQuery"
+        "keydown .searchquery": "keys",
+        "click .clearbutton": "clearQuery",
+        "keyup .searchquery": "toggleClearButton"
     },
 
     initialize: function() {
@@ -158,6 +159,13 @@ function(app, Playlist) {
           model: track
         }));
       }, this);
+    },
+    
+    /**
+     * Udpate clear button, depending on search query.
+     */
+    afterRender: function() {
+      this.toggleClearButton();
     },
     
     updateInfo: function() {
@@ -200,10 +208,10 @@ function(app, Playlist) {
     /**
      * eventhandler
      */
-    enterKey: function(ev) {
-        if (ev.keyCode === 13) {
-            this.goSearch();
-        }
+    keys: function(ev) {
+      if (ev.keyCode === 13) {
+        this.goSearch();
+      }
     },
     
     /**
@@ -212,6 +220,18 @@ function(app, Playlist) {
     clearQuery: function() {
       this.$(".searchquery").val("");
       this.goSearch();
+    },
+    
+    /**
+     * eventhandler
+     */
+    toggleClearButton: function() {
+      var query = this.$('.searchquery').val();
+      if(query) {
+        this.$('.clearbutton').removeClass("hidden");
+      } else {
+        this.$('.clearbutton').addClass("hidden");
+      }
     }
     
     
