@@ -52,14 +52,14 @@ ul.searchlist > li {
 }
 
 ul.searchlist > li .item {
-    background-color: #f6f6f6;
+    background-color: #f0f0f0;
     height: 40px;
     margin-bottom: 3px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dadada;
 }
 
 ul.searchlist > li .item:hover {
-    background-color: #e0e0e0;
+    background-color: #dadada;
 }
 
 ul.searchlist > li .item:hover img {
@@ -89,13 +89,13 @@ ul.playlist > li {
 }
 
 ul.playlist > li .item {
-    background-color: #f6f0e6;
+    background-color: #f6f6f6;
     height: 40px;
     margin-bottom: 3px;
-    border: 1px solid #e0dad0;
+    border: 1px solid #e0e0e0;
 }
 ul.playlist > li .item:hover {
-    background-color: #e0dad0;
+    background-color: #e0e0e0;
 }
 
 ul.playlist > li .item.playing {
@@ -150,4 +150,3 @@ ul.playlist > li .user {
 .left {
     left: 0;
 }
-
