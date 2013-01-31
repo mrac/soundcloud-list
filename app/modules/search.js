@@ -12,6 +12,7 @@ function(app, Playlist) {
   
   
   /**
+   * ======================================================================================================
    * Search collection.
    * @constructor
    * @property {String}   query
@@ -54,6 +55,7 @@ function(app, Playlist) {
   
   
   /**
+   * ======================================================================================================
    * Search item view.
    * @constructor
    */
@@ -82,6 +84,7 @@ function(app, Playlist) {
   
   
   /**
+   * ======================================================================================================
    * Search list view.
    * @constructor
    * @property {String}   query
