@@ -4,6 +4,7 @@
     display: block;
     margin: 0px auto;
     padding: 30px;
+    font-family: Interstate, 'Lucida Grande', Helvetica, Arial, sans-serif;    
 }
 
 hr {
@@ -18,10 +19,11 @@ h2.title {
     display: inline;
     position: relative;
     top: 14px;
+    font-size: 22px;
 }
 
 h4 {
-    margin: 5px 0 5px 0;
+    margin: 22px 0 5px 0;
 }
 
 img.thumbnail {
@@ -31,6 +33,9 @@ img.thumbnail {
 
 .search-container {
     margin-bottom: 24px;
+}
+
+input.searchquery {
 }
 
 .searchbox {
