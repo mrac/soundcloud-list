@@ -197,13 +197,16 @@ function(app) {
      * @param {String} trackId
      */
     playById: function(trackId) {
-      var track;
+      var track = this.getTrackFromId(trackId);
       if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
         Playlist.Track.currentSound.resume();
-        track = this.getTrackFromId(trackId);
         track.trigger("resume", trackId);
       } else {
-        this.replayById(trackId);
+        if(track) {
+          this.replayById(trackId);
+        } else {
+          app.router.navigate("", {trigger: false, replace: true});
+        }
       }
     },
     
@@ -212,14 +215,18 @@ function(app) {
      * @param {String} trackId
      */
     pauseById: function(trackId) {
-      var track;
+      var track = this.getTrackFromId(trackId);
       var doPause = true;
       if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
         Playlist.Track.currentSound.pause();
         track = this.getTrackFromId(trackId);
         track.trigger("pause", trackId);
       } else {
-        this.replayById(trackId, doPause);
+        if(track) {
+          this.replayById(trackId, doPause);
+        } else {
+          app.router.navigate("", {trigger: false, replace: true});
+        }
       }
     },
     
@@ -341,7 +348,16 @@ function(app) {
     events: {
         "click": "triggerGlobalPlayPause",
         "click .remove": function(ev) {
-          this.model.destroy();
+          if(app.router.isMobile()) {
+            // For mobiles hide item and trigger event
+            this.$el.hide();
+            this.model.destroy();
+          } else {
+            // For desktops slide item and trigger event
+            this.$el.slideUp(100, function() {
+              this.model.destroy();
+            }.bind(this));
+          }
           ev.stopPropagation();
         },
         "click .moveup": function(ev) {

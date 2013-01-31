@@ -127,7 +127,7 @@ function(app, Playlist, Search) {
      */
     add: function(trackId) {
       this.playlistItems.addById(trackId);
-      this.go("");
+      app.router.navigate("", {trigger: false, replace: true});
     },
     
     /**
