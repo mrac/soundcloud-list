@@ -1,12 +1,12 @@
-<div class="item wrapper<%= model.get("paused") ? " paused" : "" %><%= model.get("playing") ? " playing" : "" %>">
+<div class="item wrapper <%= model.get('paused') ? ' paused' : '' %><%= (model.get('playing') ? ' playing' : '') %>">
     <div class="track left">
-        <% if(model.get("artwork_url")) { %>
-        <img class="thumbnail" src="<%= model.get("artwork_url") %>" />
+        <% if(model.get('artwork_url')) { %>
+        <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
         <% } else { %>
         <img class="thumbnail" src="<%= defaultThumbnail %>" />
         <% } %>
-        <span class="title"><%= model.get("title").substr(0,40) %></span>
-        <span class="user">- <%= model.get("user").permalink.substr(0,20) %></span>
+        <span class="title"><%= model.get('title').substr(0,40) %></span>
+        <span class="user">- <%= model.get('user').permalink.substr(0,20) %></span>
     </div>
     <div class="buttons right">
         <input class="moveup" type="button" value="Up" />

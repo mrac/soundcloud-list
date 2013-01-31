@@ -75,10 +75,17 @@ function(app, Playlist, Search) {
     setGlobalEvents: function() {
       this.listenTo(app, {
         "global:remove": this.goRemove,
-        "global:add": this.goAdd,
         "global:play": this.goPlay,
-        "global:pause": this.goPause
+        "global:pause": this.goPause,
+        "global:addTrack": this.addTrack
       });
+    },
+    
+    /**
+     * Checks if the device is a mobile.
+     */
+    isMobile: function() {
+      return (window.innerWidth <= 800 && window.innerHeight <= 600);
     },
     
     /**
@@ -103,6 +110,7 @@ function(app, Playlist, Search) {
      */
     add: function(trackId) {
       this.playlistItems.addById(trackId);
+      this.go("");
     },
     
     /**
@@ -132,29 +140,31 @@ function(app, Playlist, Search) {
     /**
      * global eventhandler
      */
-    goRemove: function(model) {
-      app.router.go("remove", model.id);
+    goRemove: function(track) {
+      app.router.go("remove", track.id);
+    },
+        
+    /**
+     * global eventhandler
+     */
+    addTrack: function(track) {
+      var newTrack = track.clone();
+      this.playlistItems.add(newTrack);
+      newTrack.save();
     },
     
     /**
      * global eventhandler
      */
-    goAdd: function(model) {
-      app.router.go("add", model.id);
+    goPlay: function(track) {
+      app.router.go("play", track.id);
     },
     
     /**
      * global eventhandler
      */
-    goPlay: function(model) {
-      app.router.go("play", model.id);
-    },
-    
-    /**
-     * global eventhandler
-     */
-    goPause: function(model) {
-      app.router.go("pause", model.id);
+    goPause: function(track) {
+      app.router.go("pause", track.id);
     }
     
     

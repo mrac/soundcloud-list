@@ -4,13 +4,7 @@
   <input class="clearbutton" type="button" value="Clear" />
 </div>
 
-<% if (query) { %>
-<%   if (count) { %>
-<h4 class="info">Found <%= count %> tracks</h4>
-<%   } else { %>
-<h4 class="info">No tracks found</h4>
-<%   } %>
-<% } %>
+<h4 class="info <?%= (info ? '' : ' hidden') %>"><%= info %></h4>
 
 <ul class="searchlist" />
 

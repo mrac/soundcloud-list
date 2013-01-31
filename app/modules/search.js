@@ -73,11 +73,25 @@ function(app, Playlist) {
     },
     
     events: {
-        // Trigger global events to make events bubble up.
-        "click": function(ev) {
-          app.trigger("global:add", this.model);
-          ev.stopPropagation();
-        },
+        "click": "removeTrack"
+    },
+    
+    /**
+     * eventhandler
+     */
+    removeTrack: function(ev) {
+      app.trigger("global:addTrack", this.model);
+      if(app.router.isMobile()) {
+        // For mobiles hide item and trigger event
+        this.$el.hide();
+        this.model.collection.remove(this.model);
+      } else {
+        // For desktops slide item and trigger event
+        this.$el.slideUp(100, function() {
+          this.model.collection.remove(this.model);
+        }.bind(this));
+      }
+      ev.stopPropagation();
     }
     
   });
@@ -97,8 +111,8 @@ function(app, Playlist) {
     
     serialize: function() {
         return {
-            count: this.collection.length,
-            query: this.query
+            query: this.query,
+            info: this.info
         };
     },
     
@@ -106,7 +120,7 @@ function(app, Playlist) {
         // Execute collection methods.
         "click .searchbutton": "goSearch",
         "keydown .searchquery": "enterKey",
-        "click .clearbutton": "clearButton"
+        "click .clearbutton": "clearQuery"
     },
 
     initialize: function() {
@@ -122,26 +136,40 @@ function(app, Playlist) {
           this.emptyInfo();
           this.updateSearchbox(this.collection.query);
         },
-        "remove": this.render
-      });
-      
-      // Listen to global events.
-      this.listenTo(app, {
-        "global:addcomplete": function(track) {
-          this.collection.remove(track);
+        "remove": function() {
+          this.updateInfo();
+          if(this.info) {
+            this.$(".info").removeClass("hidden").text(this.info);
+          } else {
+            this.$(".info").addClass("hidden");
+          }
         }
       });
+      
     },
     
     /**
      * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
+      this.updateInfo();
       this.collection.each(function(track) {
         this.insertView("ul", new Search.Views.Item({
           model: track
         }));
       }, this);
+    },
+    
+    updateInfo: function() {
+      if(this.query) {
+        if(this.collection.length) {
+          this.info = "Found "+this.collection.length+" tracks";
+        } else {
+          this.info = "No tracks found";
+        }
+      } else {
+        this.info = "";
+      }
     },
     
     disableSearch: function() {
@@ -181,7 +209,7 @@ function(app, Playlist) {
     /**
      * eventhandler
      */
-    clearButton: function() {
+    clearQuery: function() {
       this.$(".searchquery").val("");
       this.goSearch();
     }

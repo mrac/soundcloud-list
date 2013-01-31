@@ -130,6 +130,7 @@ ul.playlist > li:hover .buttons {
     visibility: visible;
 }
 
+
 ul.playlist > li .title {
 }
 
@@ -149,4 +150,8 @@ ul.playlist > li .user {
 }
 .left {
     left: 0;
+}
+
+.hidden {
+    display: none;
 }
