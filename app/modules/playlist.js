@@ -5,6 +5,7 @@ define([
 
 function(app) {
 
+  
   var Playlist = app.module();
   
   
@@ -14,6 +15,22 @@ function(app) {
    * @constructor
    */
   Playlist.Track = Backbone.Model.extend({
+    defaults: {
+      customOrder: ""
+    },
+    initialize: function() {
+      if(!this.attributes.customOrder) {
+        this.attributes.customOrder = Playlist.Track.getUniqueId();
+      }
+    }
+  }, {
+    // Class methods
+    getUniqueId: (function() {
+      var uniqueId = 0;
+      return function() {
+        return (Date.now() + (uniqueId++)).toString(26);
+      };
+    })()
   });
 
 
@@ -27,14 +44,24 @@ function(app) {
    */
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
+
+    localStorage: new Backbone.LocalStorage("SoundCloud-Playlist"),
+    
+    comparator: function(track) {
+      return track.get("customOrder");
+    },
     
     /**
      * Fetch track from SoundCloud by track id and add it to the collection.
      */
     addById: function(trackId) {
-      SC.get('/tracks/'+trackId, {}, function(tracks, err) {
+      SC.get('/tracks/'+trackId, {}, function(track, err) {
         if(!err) {
-          this.add(tracks);
+          if(track) {
+            track = new Playlist.Track(track);
+            this.add(track);
+            track.save();
+          }
         } else {
           console.log("Error while getting a track from SoundCloud: ", err);
           this.trigger("adderror");
@@ -50,17 +77,28 @@ function(app) {
     removeById: function(trackId) {
       var trackIdNumber = parseInt(trackId, 10);
       var tracks = this.where({id: trackIdNumber});
-      this.remove(tracks);
+      var track = tracks[0];
+      if(track) {
+        track.destroy();
+      }
     },
     
     /**
      * Move track up.
      */
-    moveUp: function(model) {
-      var index = this.indexOf(model);
+    moveUp: function(track) {
+      var index = this.indexOf(track);
+      var prevTrack;
+      var customOrder = track.get("customOrder");
+      var prevCustomOrder;
       if(index > 0) {
-        this.remove(model, {silent: true});
-        this.add(model, {at: index-1, silent: true});
+        prevTrack = this.at(index-1);
+        prevCustomOrder = prevTrack.get("customOrder");
+        prevTrack.set({customOrder: customOrder});
+        track.set({customOrder: prevCustomOrder});
+        track.save();
+        prevTrack.save();
+        this.sort();
         this.trigger("move");
       }
     },
@@ -68,11 +106,19 @@ function(app) {
     /**
      * Move track down.
      */
-    moveDown: function(model) {
-      var index = this.indexOf(model);
-      if (index < this.models.length) {
-        this.remove(model, {silent: true});
-        this.add(model, {at: index+1, silent: true});
+    moveDown: function(track) {
+      var index = this.indexOf(track);
+      var nextTrack;
+      var customOrder = track.get("customOrder");
+      var nextCustomOrder;
+      if(index < this.models.length - 1) {
+        nextTrack = this.at(index+1);
+        nextCustomOrder = nextTrack.get("customOrder");
+        nextTrack.set({customOrder: customOrder});
+        track.set({customOrder: nextCustomOrder});
+        track.save();
+        nextTrack.save();
+        this.sort();
         this.trigger("move");
       }
     }    

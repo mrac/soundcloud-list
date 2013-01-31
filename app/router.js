@@ -21,8 +21,13 @@ function(app, Playlist, Search) {
     },
 
     initialize: function() {
+      // Create collections and fetch playlist from the storage.
       this.searchItems = new Search.Collection();
       this.playlistItems = new Playlist.Collection();
+      this.playlistItems.fetch();
+      this.playlistItems.sort();
+
+      // Initializations.
       this.initSoundCloud();
       this.setViews();
       this.setGlobalEvents();

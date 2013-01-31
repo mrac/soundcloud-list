@@ -1,5 +1,6 @@
 define([
-  "backbone.layoutmanager"
+  "backbone.layoutmanager",
+  "backbone-localStorage"
 ], function() {
 
   // Provide a global location to place configuration settings and module
