@@ -111,8 +111,6 @@ function(app) {
    * ======================================================================================================
    * Playlist collection.
    * @constructor
-   * @event               addstart
-   * @event               adderror
    * @event               move
    * @event               play
    * @event               playfinish
@@ -140,17 +138,13 @@ function(app) {
           if(track) {
             track = new Playlist.Track(track);
             this.add(track);
-            app.trigger("global:addcomplete", track);
             track.save();
           }
         } else {
           console.log("Error while getting a track from SoundCloud: ", err);
           alert("Error while getting a track from SoundCloud");
-          this.trigger("adderror", trackId);
         }
       }.bind(this));
-      
-      this.trigger("addstart", trackId);
     },
 
     /**
