@@ -39,10 +39,6 @@ h4 {
     margin: 22px 0 5px 0;
 }
 
-img.thumbnail {
-   width: 40px;
-   margin-right: 5px;
-}
 
 .search-container {
     margin-bottom: 24px;
@@ -117,12 +113,52 @@ ul.searchlist > li .item:hover img {
     opacity: 0.5;
 }
 
-ul.searchlist > li .title {
+ul.searchlist > li .track {
 }
 
+ul.searchlist > li .thumbnail-container {
+    width:40px;
+    height:40px;
+    margin: 0 10px 0 0;
+    padding:0;
+    border:0;
+    float: left;
+}
+
+ul.searchlist > li img.thumbnail {
+   width: 40px;
+}
+
+ul.searchlist > li .title {
+    font-weight: bold;
+}
+
+ul.searchlist > li .upperrow {
+    width: 100%;
+    height: 18px;
+}
 ul.searchlist > li .user {
-    color: #a0a0a0;
-    font-size: 90%;
+    font-size: 13px;
+    width: 50%;
+    float: left;
+}
+ul.searchlist > li .genre {
+    padding-left: 10px;
+    font-size: 13px;
+    width: 200px;
+    float: left;
+}
+ul.searchlist > li .duration {
+    padding-left: 10px;
+    font-size: 11px;
+    color: #808080;
+    float: left;
+}
+ul.searchlist > li .date {
+    padding-left: 10px;
+    font-size: 13px;
+    width: 200px;
+    float: left;
 }
 
 .playlist-container {
@@ -172,6 +208,10 @@ ul.playlist > li .item:hover img {
 ul.playlist > li .track {
 }
 
+ul.playlist > li img.thumbnail {
+   width: 40px;
+   margin-right: 5px;
+}
 
 ul.playlist > li .buttons {
     text-align: right;
@@ -216,3 +256,16 @@ ul.playlist > li .user {
 footer {
     margin-bottom: 20px;
 }
+
+
+
+/* ------------ Smartphones -------------*/
+@media only screen and (max-width: 760px) {
+  #mobile-detector {
+    display: none;
+  }
+}
+
+
+
+

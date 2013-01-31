@@ -48,6 +48,33 @@ function(app) {
     },
     
     /**
+     * Return human readable string of duration time.
+     */
+    duration: function() {
+      var ms = this.get("duration");
+      var x, seconds, minutes, hours, days;
+      var text = "";
+      x = ms / 1000;
+      seconds = x % 60;
+      x /= 60;
+      minutes = x % 60;
+      x /= 60;
+      hours = x % 24;
+      x /= 24;
+      days = x;
+      days = Math.floor(days);
+      hours = Math.floor(hours);
+      minutes = Math.floor(minutes);
+      seconds = Math.floor(seconds);
+      if(days) text += " " + days + " d";
+      if(hours) text += " " + hours + " h";
+      if(minutes) text += " " + minutes + " m";
+      if(seconds) text += " " + seconds + " s";
+      if(text.length) text = text.substr(1);
+      return text;
+    },
+    
+    /**
      * eventhandler
      */
     playon: function() {

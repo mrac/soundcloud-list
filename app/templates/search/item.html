@@ -1,13 +1,20 @@
-<div class="item wrapper">
-    <div class="track left">
-        <% if(model.get('artwork_url')) { %>
-        <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
-        <% } else { %>
-        <img class="thumbnail" src="<%= defaultThumbnail %>" />
-        <% } %>
-        <span class="title"><%= model.get('title').substr(0,40) %></span>
-        <span class="user">- <%= model.get('user').permalink.substr(0,20) %></span>
-    </div>
-    <div class="buttons right">
+<div class="item">
+    <div class="track">
+        <div class="thumbnail-container">
+            <% if(model.get('artwork_url')) { %>
+            <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
+            <% } else { %>
+            <img class="thumbnail" src="<%= defaultThumbnail %>" />
+            <% } %>
+        </div>
+        
+        <div class="upperrow">
+            <div class="user"><%= model.get('user').permalink.substr(0,20) %></div>
+            <div class="duration"><%= model.duration() %></div>
+            <!--div class="date"><%= model.get('created_at').substr(0,10) %></div>
+            <div class="genre"><%= model.get('genre') %></div-->
+        </div>
+        <div class="title"><%= model.get('title').substr(0,40) %></div>
+    
     </div>
 </div>

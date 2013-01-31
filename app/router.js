@@ -83,10 +83,10 @@ function(app, Playlist, Search) {
     },
     
     /**
-     * Checks if the device is a mobile.
+     * Checks if the device is a smartphone.
      */
     isMobile: function() {
-      return (window.innerWidth <= 800 && window.innerHeight <= 600);
+      return ($('#mobile-detector').css('dislpay') == "none");
     },
     
     /**
