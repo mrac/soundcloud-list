@@ -259,12 +259,48 @@ footer {
 
 
 
-/* ------------ Smartphones -------------*/
-@media only screen and (max-width: 760px) {
-  #mobile-detector {
-    display: none;
-  }
+        
+@media only screen and (max-width: 999px) {
+    /* rules that only apply for canvases narrower than 1000px */
+    
+    ul.searchlist > li .item:hover {
+        background-color: #f6f6f6;
+    }
+    ul.searchlist > li .item:hover img {
+        opacity: 1;
+    }
+    
 }
+
+@media only screen and (device-width: 768px) and (orientation: landscape) {
+    /* rules for iPad in landscape orientation */
+    
+    ul.searchlist > li .item:hover {
+        background-color: #f6f6f6;
+    }
+    ul.searchlist > li .item:hover img {
+        opacity: 1;
+    }
+    
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+    /* iPhone and Android-Smathphones rules here */
+    
+    #mobile-detector {
+      display: none;
+    }
+    
+    ul.searchlist > li .item:hover {
+        background-color: #f6f6f6;
+    }
+    ul.searchlist > li .item:hover img {
+        opacity: 1;
+    }
+    
+}        
+    
+  
 
 
 

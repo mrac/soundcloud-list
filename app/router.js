@@ -86,7 +86,18 @@ function(app, Playlist, Search) {
      * Checks if the device is a smartphone.
      */
     isMobile: function() {
-      return ($('#mobile-detector').css('dislpay') == "none");
+      // the below conditional css rule is created by @media tag in css file
+      // #mobile-detector { display: none}
+      // so here we can detect it
+      return ($('#mobile-detector').css('display') == "none");
+    },
+    
+    /**
+     * Checks if the device has a touch-screen.
+     */
+    isTouchScreen: function() {
+      return !!('ontouchstart' in window) // works on most browsers 
+        || !!('onmsgesturechange' in window); // works on ie10
     },
     
     /**
