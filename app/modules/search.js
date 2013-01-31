@@ -22,9 +22,9 @@ function(app, Playlist) {
   Search.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
     
-    initialize: function(models, options) {
-    },
-    
+    /**
+     * Search tracks in SoundCloud and add them to the collection.
+     */
     search: function(searchQuery) {
         var pageSize = 10;
         this.query = searchQuery;
@@ -61,8 +61,8 @@ function(app, Playlist) {
       };
     },
     
-    // Define global events to make them bubble up.
     events: {
+        // Trigger global events to make events bubble up.
         "click .track": function() {
           app.trigger("global:add", this.model);
         },
@@ -75,15 +75,12 @@ function(app, Playlist) {
   /**
    * Search list view.
    * @constructor
+   * @property {String}   query
    */
   Search.Views.List = Backbone.View.extend({
     template: "search/list",
     
     className: "search-container",
-    
-    defaults: {
-      query: ""
-    },
     
     serialize: function() {
         return {
@@ -93,11 +90,13 @@ function(app, Playlist) {
     },
     
     events: {
+        // Execute collection methods.
         "click .searchbutton": "goSearch",
         "keydown .searchquery": "enterKey"
     },
 
     initialize: function() {
+      // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": function() {
           this.query = this.collection.query;
@@ -112,6 +111,9 @@ function(app, Playlist) {
       });
     },
     
+    /**
+     * Render item views.
+     */
     beforeRender: function() {
       this.collection.each(function(track) {
         this.insertView("ul", new Search.Views.Item({
@@ -148,8 +150,8 @@ function(app, Playlist) {
     /**
      * eventhandler
      */
-    enterKey: function(e) {
-        if (e.keyCode === 13) {
+    enterKey: function(ev) {
+        if (ev.keyCode === 13) {
             this.goSearch();
         }
     }

@@ -23,6 +23,7 @@ function(app) {
    * @constructor
    * @event               addstart
    * @event               adderror
+   * @event               move
    */
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
@@ -50,7 +51,31 @@ function(app) {
       var trackIdNumber = parseInt(trackId, 10);
       var tracks = this.where({id: trackIdNumber});
       this.remove(tracks);
-    }
+    },
+    
+    /**
+     * Move track up.
+     */
+    moveUp: function(model) {
+      var index = this.indexOf(model);
+      if(index > 0) {
+        this.remove(model, {silent: true});
+        this.add(model, {at: index-1, silent: true});
+        this.trigger("move");
+      }
+    },
+    
+    /**
+     * Move track down.
+     */
+    moveDown: function(model) {
+      var index = this.indexOf(model);
+      if (index < this.models.length) {
+        this.remove(model, {silent: true});
+        this.add(model, {at: index+1, silent: true});
+        this.trigger("move");
+      }
+    }    
     
   });
 
@@ -71,16 +96,18 @@ function(app) {
       };
     },
     
-    // Define global events to make them bubble up.
     events: {
+        // Trigger global events to make events bubble up.
         "click .remove": function() {
           app.trigger("global:remove", this.model);
         },
+        
+        // Execute collection methods.
         "click .moveup": function() {
-          app.trigger("global:moveUp", this.model);
+          this.model.collection.moveUp(this.model);
         },
         "click .movedown": function() {
-          app.trigger("global:moveDown", this.model);
+          this.model.collection.moveDown(this.model);
         }
     }
     
@@ -103,42 +130,27 @@ function(app) {
     },
     
     initialize: function() {
-      
       // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": this.render,
         "add": this.render,
         "remove": this.render,
+        "move": this.render,
         "fetch": function() {
         }
       });
-      
     },
-    
+
+    /**
+     * Render item views.
+     */
     beforeRender: function() {
       this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
           model: track
         }));
       }, this);
-    },
-        
-    moveUp: function(model) {
-      var index = this.indexOf(model);
-      if(index > 0) {
-        this.remove(model, {silent: true});
-        this.add(model, {at: index-1, silent: true});
-      }
-    },
-    
-    moveDown: function(model) {
-      var index = this.indexOf(model);
-      if (index < this.models.length) {
-        this.remove(model, {silent: true});
-        this.add(model, {at: index+1, silent: true});
-      }
     }
-    
     
   });
 
