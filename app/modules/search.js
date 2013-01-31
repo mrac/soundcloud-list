@@ -171,9 +171,9 @@ function(app, Playlist) {
     updateInfo: function() {
       if(this.query) {
         if(this.collection.length) {
-          this.info = "Found "+this.collection.length+" tracks";
+          this.info = "Choose from "+this.collection.length+" tracks";
         } else {
-          this.info = "No tracks found";
+          this.info = "No tracks to select";
         }
       } else {
         this.info = "";
