@@ -17,7 +17,9 @@ function(app, Playlist, Search) {
       "": "index",
       "search/(:query)": "search",
       "add/:track": "add",
-      "remove/:track": "remove"
+      "remove/:track": "remove",
+      "play/:track": "play",
+      "pause/:track": "pause"
     },
 
     initialize: function() {
@@ -26,6 +28,7 @@ function(app, Playlist, Search) {
       this.playlistItems = new Playlist.Collection();
       this.playlistItems.fetch();
       this.playlistItems.sort();
+      this.playlistItems.clearStatusAll();
 
       // Initializations.
       this.initSoundCloud();
@@ -72,7 +75,9 @@ function(app, Playlist, Search) {
     setGlobalEvents: function() {
       this.listenTo(app, {
         "global:remove": this.goRemove,
-        "global:add": this.goAdd
+        "global:add": this.goAdd,
+        "global:play": this.goPlay,
+        "global:pause": this.goPause
       });
     },
     
@@ -109,6 +114,22 @@ function(app, Playlist, Search) {
     },
     
     /**
+     * action
+     * @param {String} trackId
+     */
+    play: function(trackId) {
+      this.playlistItems.playById(trackId);
+    },
+    
+    /**
+     * action
+     * @param {String} trackId
+     */
+    pause: function(trackId) {
+      this.playlistItems.pauseById(trackId);
+    },
+    
+    /**
      * global eventhandler
      */
     goRemove: function(model) {
@@ -120,6 +141,20 @@ function(app, Playlist, Search) {
      */
     goAdd: function(model) {
       app.router.go("add", model.id);
+    },
+    
+    /**
+     * global eventhandler
+     */
+    goPlay: function(model) {
+      app.router.go("play", model.id);
+    },
+    
+    /**
+     * global eventhandler
+     */
+    goPause: function(model) {
+      app.router.go("pause", model.id);
     }
     
     

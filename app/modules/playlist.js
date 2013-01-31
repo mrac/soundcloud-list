@@ -27,13 +27,46 @@ function(app) {
     // Instance members.
     
     defaults: {
-      customOrder: ""
+      customOrder: "",
+      playing: false,
+      paused: false
     },
     
     initialize: function() {
       if(!this.attributes.customOrder) {
         this.attributes.customOrder = Playlist.Track.getUniqueId();
       }
+      
+      // Handle local events
+      this.on("play", this.playon);
+      this.on("pause", this.pause);
+      this.on("resume", this.playon);
+      this.on("playfinish", this.playoff);
+      this.on("playstop", this.playoff);
+    },
+    
+    /**
+     * eventhandler
+     */
+    playon: function() {
+      this.attributes.paused = false;
+      this.attributes.playing = true;
+    },
+    
+    /**
+     * eventhandler
+     */
+    pause: function() {
+      this.attributes.playing = false;
+      this.attributes.paused = true;
+    },
+
+    /**
+     * eventhandler
+     */
+    playoff: function() {
+      this.attributes.playing = false;
+      this.attributes.paused = false;
     }
     
   }, {
@@ -128,21 +161,19 @@ function(app) {
     
     /**
      * Replay SoundCloud track by id.
-     * @param {String} trackId
+     * @param {String}    trackId
+     * @param {Boolean}   doPause
      */
-    replayById: function(trackId) {
+    replayById: function(trackId, doPause) {
       var thisCollection = this;
       var track = this.getTrackFromId(trackId);
       SC.stream("/tracks/"+trackId, function(sound) {
-        console.log("sound:", sound);
-        console.log("changed track: ", Playlist.Track.currentTrackId, " => ", trackId);
         // Stop currently playing track.
         var prevTrackId = Playlist.Track.currentTrackId;
         var prevSound = Playlist.Track.currentSound;
         var prevTrack;
         if(prevSound && prevTrackId) {
           prevTrack = thisCollection.getTrackFromId(prevTrackId);
-          console.log("prevTrack", prevTrack, prevSound);
           prevSound.stop();
           prevTrack.trigger("playstop", trackId);
         }
@@ -158,55 +189,56 @@ function(app) {
           }
         });
         track.trigger("play", trackId);
+        if(doPause) {
+          sound.pause();
+          track.trigger("pause", trackId);
+        }
       });
     },
     
     /**
-     * Play/resume SoundCloud track by id.
+     * Play/resume track by id.
      * @param {String} trackId
      */
     playById: function(trackId) {
-      if(Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
-        this.resumeById(trackId);
+      var track;
+      if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
+        Playlist.Track.currentSound.resume();
+        track = this.getTrackFromId(trackId);
+        track.trigger("resume", trackId);
       } else {
         this.replayById(trackId);
       }
     },
     
     /**
-     * Pause the currently playing track by id.
+     * Pause/repause track by id.
      * @param {String} trackId
      */
     pauseById: function(trackId) {
-      var track = this.getTrackFromId(trackId);
-      var currentTrackId = Playlist.Track.currentTrackId;
-      var currentSound = Playlist.Track.currentSound;
-      // Paranoic check, if trackId is current track
-      if(currentSound && (trackId == currentTrackId)) {
-        // Paranoic check, if currentSound is not paused already
-        if(!currentSound.paused) {
-          currentSound.pause();
-          track.trigger("pause", trackId);
-        }
+      var track;
+      var doPause = true;
+      if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
+        Playlist.Track.currentSound.pause();
+        track = this.getTrackFromId(trackId);
+        track.trigger("pause", trackId);
+      } else {
+        this.replayById(trackId, doPause);
       }
     },
     
     /**
-     * Resume the currently paused track by id.
-     * @param {String} trackId
+     * Clear status of each track.
      */
-    resumeById: function(trackId) {
-      var track = this.getTrackFromId(trackId);
-      var currentTrackId = Playlist.Track.currentTrackId;
-      var currentSound = Playlist.Track.currentSound;
-      // Paranoic check, if trackId is current track
-      if(currentSound && (trackId == currentTrackId)) {
-        // Paranoic check, if currentSound is paused already
-        if(currentSound.paused) {
-          currentSound.resume();
-          track.trigger("resume", trackId);
-        }
-      }
+    clearStatusAll: function() {
+      this.each(function(track) {
+        track.set({
+          playing: false,
+          paused: false
+        }, {
+          silent: true
+        });
+      }, this);
     },
     
     /**
@@ -301,12 +333,12 @@ function(app) {
     initialize: function() {
       // Listen to model events.
       this.listenTo(this.model, {
-        "play": this.play,
-        "playfinish": this.playFinish,
-        "playstop": this.playFinish,
+        "play": this.render,
+        "playfinish": this.render,
+        "playstop": this.render,
         "playing": this.playing,
-        "pause": this.pause,
-        "resume": this.play
+        "pause": this.render,
+        "resume": this.render
       });
     },
     
@@ -316,21 +348,7 @@ function(app) {
           app.trigger("global:remove", this.model);
           ev.stopPropagation();
         },
-        "click": function() {
-          if(Playlist.Track.currentTrackId == this.model.get("id")) {
-            // If clicked the same track..
-            if(Playlist.Track.currentSound && Playlist.Track.currentSound.paused) {
-              // and it's paused, then play again.
-              app.trigger("global:play", this.model);
-            } else {
-              // otherwise, pause it.
-              app.trigger("global:pause", this.model);
-            }
-          } else {
-            // If clicked different track, just play.
-            app.trigger("global:play", this.model);
-          }
-        },
+        "click": "triggerGlobalPlayPause",
         
         // Execute collection methods.
         "click .moveup": function(ev) {
@@ -346,25 +364,21 @@ function(app) {
     /**
      * eventhandler
      */
-    play: function() {
-      this.$('.item').removeClass("paused");
-      this.$('.item').addClass("playing");
-    },
-    
-    /**
-     * eventhandler
-     */
-    playFinish: function() {
-      this.$('.item').removeClass("paused");
-      this.$('.item').removeClass("playing");
-    },
-    
-    /**
-     * eventhandler
-     */
-    pause: function() {
-      this.$('.item').removeClass("playing");
-      this.$('.item').addClass("paused");
+    triggerGlobalPlayPause: function() {
+      var track;
+      if(Playlist.Track.currentTrackId == this.model.get("id")) {
+        // If clicked the same track..
+        if(Playlist.Track.currentSound && Playlist.Track.currentSound.paused) {
+          // and it's paused, then play again.
+          app.trigger("global:play", this.model);
+        } else {
+          // otherwise, pause it.
+          app.trigger("global:pause", this.model);
+        }
+      } else {
+        // If clicked different track, just play.
+        app.trigger("global:play", this.model);
+      }
     },
     
     /**
@@ -399,8 +413,7 @@ function(app) {
         "add": this.render,
         "remove": this.render,
         "move": this.render,
-        "playfinish": this.playNext,
-        "playing": function() {}
+        "playfinish": this.goPlayNext
       });
     },
 
@@ -418,7 +431,7 @@ function(app) {
     /**
      * eventhandler
      */
-    playNext: function(trackId) {
+    goPlayNext: function(trackId) {
       var nextTrackId = this.collection.getNextTrackId(trackId);
       app.router.go("play", nextTrackId);
     }

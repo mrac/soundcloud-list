@@ -94,9 +94,22 @@ ul.playlist > li .item {
     margin-bottom: 3px;
     border: 1px solid #e0dad0;
 }
-
 ul.playlist > li .item:hover {
     background-color: #e0dad0;
+}
+
+ul.playlist > li .item.playing {
+    background-color: #a0f0a0;
+}
+ul.playlist > li .item.playing:hover {
+    background-color: #90e090;
+}
+
+ul.playlist > li .item.paused {
+    background-color: #f0a0a0;
+}
+ul.playlist > li .item.paused:hover {
+    background-color: #e09090;
 }
 
 ul.playlist > li .item:hover img {
@@ -110,6 +123,11 @@ ul.playlist > li .track {
 ul.playlist > li .buttons {
     text-align: right;
     padding: 0px 10px 0px 10px;
+    visibility: hidden;
+}
+
+ul.playlist > li:hover .buttons {
+    visibility: visible;
 }
 
 ul.playlist > li .title {
@@ -132,3 +150,4 @@ ul.playlist > li .user {
 .left {
     left: 0;
 }
+
