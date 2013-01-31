@@ -56,6 +56,8 @@ ul.searchlist > li .item {
     height: 40px;
     margin-bottom: 3px;
     border: 1px solid #dadada;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 ul.searchlist > li .item:hover {
@@ -93,6 +95,8 @@ ul.playlist > li .item {
     height: 40px;
     margin-bottom: 3px;
     border: 1px solid #e0e0e0;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 ul.playlist > li .item:hover {
     background-color: #e0e0e0;
