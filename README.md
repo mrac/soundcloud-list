@@ -1,5 +1,4 @@
-
-# What SoundCloud List ? #
+# What is SoundCloud List ? #
 A simple web application for creating locally stored playlists of any audios provided by SoundCloud.com.
 
 # Application URL #
