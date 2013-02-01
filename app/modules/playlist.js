@@ -28,14 +28,15 @@ function(app) {
     // Instance members.
     
     defaults: {
-      customOrder: "",
+      ordinal: "",
       playing: false,
-      paused: false
+      paused: false,
+      hidden: false
     },
     
     initialize: function() {
-      if(!this.get("customOrder")) {
-        this.set("customOrder", Playlist.Track.getUniqueId());
+      if(!this.get("ordinal")) {
+        this.set("ordinal", Playlist.Track.getUniqueId());
       }
       
       // Handle local events
@@ -45,6 +46,15 @@ function(app) {
       this.on("playfinish", this.playoff);
       this.on("playstop", this.playoff);
       this.on("playerror", this.pause);
+    },
+    
+    /**
+     * Override clone method to set the unique ordinal.
+     */
+    clone: function() {
+      var ret = Backbone.Model.prototype.clone.apply(this, arguments);
+      this.set("ordinal", Playlist.Track.getUniqueId());
+      return ret;
     },
     
     /**
@@ -121,7 +131,7 @@ function(app) {
     currentSound: null,
     
     /**
-     * Unique id used for customOrder.
+     * Unique id used for ordinal.
      */
     getUniqueId: (function() {
       var uniqueId = 0;
@@ -153,7 +163,7 @@ function(app) {
     localStorage: new Backbone.LocalStorage("SoundCloud-Playlist"),
     
     comparator: function(track) {
-      return track.get("customOrder");
+      return track.get("ordinal");
     },
     
     /**
@@ -277,13 +287,13 @@ function(app) {
     moveUp: function(track) {
       var index = this.indexOf(track);
       var prevTrack;
-      var customOrder = track.get("customOrder");
-      var prevCustomOrder;
+      var ordinal = track.get("ordinal");
+      var prevordinal;
       if(index > 0) {
         prevTrack = this.at(index-1);
-        prevCustomOrder = prevTrack.get("customOrder");
-        prevTrack.set({customOrder: customOrder});
-        track.set({customOrder: prevCustomOrder});
+        prevordinal = prevTrack.get("ordinal");
+        prevTrack.set({ordinal: ordinal});
+        track.set({ordinal: prevordinal});
         track.save();
         prevTrack.save();
         this.sort();
@@ -297,13 +307,13 @@ function(app) {
     moveDown: function(track) {
       var index = this.indexOf(track);
       var nextTrack;
-      var customOrder = track.get("customOrder");
-      var nextCustomOrder;
+      var ordinal = track.get("ordinal");
+      var nextordinal;
       if(index < this.models.length - 1) {
         nextTrack = this.at(index+1);
-        nextCustomOrder = nextTrack.get("customOrder");
-        nextTrack.set({customOrder: customOrder});
-        track.set({customOrder: nextCustomOrder});
+        nextordinal = nextTrack.get("ordinal");
+        nextTrack.set({ordinal: ordinal});
+        track.set({ordinal: nextordinal});
         track.save();
         nextTrack.save();
         this.sort();
@@ -381,7 +391,7 @@ function(app) {
             this.model.destroy();
           } else {
             // For desktops slide item and trigger event
-            this.$el.slideUp(100, function() {
+            this.$el.slideUp(300, function() {
               this.model.destroy();
             }.bind(this));
           }
@@ -421,7 +431,7 @@ function(app) {
      * eventhandler
      */
     playing: function(track, position, duration) {
-    },
+    }
     
   });  
   
@@ -446,10 +456,14 @@ function(app) {
       // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": this.render,
-        "add": this.render,
         "remove": this.render,
         "move": this.render,
         "playfinish": this.goPlayNext
+      });
+      
+      // Listen to global events.
+      this.listenTo(app, {
+        "global:addtrack": this.addTrack
       });
     },
 
@@ -470,6 +484,38 @@ function(app) {
     goPlayNext: function(trackId) {
       var nextTrackId = this.collection.getNextTrackId(trackId);
       app.router.go("play", nextTrackId);
+    },
+    
+    /**
+     * eventhandler
+     */
+    addTrack: function(track) {
+
+      if(!this.collection.length) this.render();
+      
+      // Explicitly render newly added track.
+      if(!this.collection.get(track)) {
+      
+        var newTrack = track.clone();
+        newTrack.set("hidden", true);
+        this.collection.add(newTrack, {at: this.collection.length});
+        
+        var newItemView = new Playlist.Views.Item({
+          model: newTrack
+        });
+        
+        this.insertView("ul", newItemView);
+        console.log(newTrack.get("hidden"));
+        
+        newItemView.render();
+        newItemView.$(".item").slideToggle(200, function() {
+          console.log("collection rendering-start!")
+          this.render();
+          console.log("collection rendering!")
+        }.bind(this));
+        
+        newTrack.set("hidden", false);
+      }
     }
 
   });

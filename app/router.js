@@ -77,8 +77,7 @@ function(app, Playlist, Search) {
     setGlobalEvents: function() {
       this.listenTo(app, {
         "global:play": this.goPlay,
-        "global:pause": this.goPause,
-        "global:addTrack": this.addTrack
+        "global:pause": this.goPause
       });
     },
     
@@ -140,16 +139,7 @@ function(app, Playlist, Search) {
       this.playlistItems.addById(trackId);
       app.router.navigate("", {trigger: false, replace: true});
     },
-    
-    /**
-     * global eventhandler
-     */
-    addTrack: function(track) {
-      var newTrack = track.clone();
-      this.playlistItems.add(newTrack);
-      newTrack.save();
-    },
-    
+        
     /**
      * global eventhandler
      */

@@ -80,7 +80,7 @@ function(app, Playlist) {
      * eventhandler
      */
     removeTrack: function(ev) {
-      app.trigger("global:addTrack", this.model);
+      app.trigger("global:addtrack", this.model);
       if(app.router.isMobile()) {
         // For mobiles hide item and trigger event
         this.$el.hide();
