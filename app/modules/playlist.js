@@ -30,8 +30,7 @@ function(app) {
     defaults: {
       ordinal: "",
       playing: false,
-      paused: false,
-      hidden: false
+      paused: false
     },
     
     initialize: function() {
@@ -490,32 +489,9 @@ function(app) {
      * eventhandler
      */
     addTrack: function(track) {
-
-      if(!this.collection.length) this.render();
-      
-      // Explicitly render newly added track.
-      if(!this.collection.get(track)) {
-      
-        var newTrack = track.clone();
-        newTrack.set("hidden", true);
-        this.collection.add(newTrack, {at: this.collection.length});
-        
-        var newItemView = new Playlist.Views.Item({
-          model: newTrack
-        });
-        
-        this.insertView("ul", newItemView);
-        console.log(newTrack.get("hidden"));
-        
-        newItemView.render();
-        newItemView.$(".item").slideToggle(200, function() {
-          console.log("collection rendering-start!")
-          this.render();
-          console.log("collection rendering!")
-        }.bind(this));
-        
-        newTrack.set("hidden", false);
-      }
+      var newTrack = track.clone();
+      this.collection.add(newTrack, {at: this.collection.length});
+      this.render();
     }
 
   });
