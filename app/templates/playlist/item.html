@@ -1,4 +1,4 @@
-<div class="item <%= model.get('paused') ? ' paused' : '' %><%= (model.get('playing') ? ' playing' : '') %>">
+<div class="item <%= model.get('paused') ? ' paused' : '' %><%= (model.get('playing') ? ' playing' : '') %><%= model.get('expanded') ? ' expanded' : '' %>">
     <div class="track">
         <div class="thumbnail-container">
             <% if(model.get('artwork_url')) { %>
@@ -15,11 +15,12 @@
             <div class="genre"><%= model.get('genre') %></div-->
         </div>
         <div class="title"><%= model.get('title').substr(0,30) %></div>
-    
-        <!--div class="buttons right">
-            <input class="moveup" type="button" value="Up" />
-            <input class="movedown" type="button" value="Down" />
-            <input class="remove" type="button" value="Remove" />
-        </div-->
+        <% if(model.get('expanded')) { %>
+        <div class="buttons">
+            <button class="moveup">UP</button>
+            <button class="movedown">DOWN</button>
+            <button class="remove">DEL</button>
+        </div>
+        <% } %>
     </div>
 </div>

@@ -290,6 +290,7 @@ ul.playlist > li .duration {
     font-size: 11px;
     color: #808080;
     float: left;
+    margin-top:2px;
 }
 ul.playlist > li .date {
     padding-left: 10px;
@@ -298,14 +299,62 @@ ul.playlist > li .date {
     float: left;
 }
 
-ul.playlist > li .buttons {
-    text-align: right;
-    padding: 0px 10px 0px 10px;
-    visibility: hidden;
+ul.playlist > li .item.expanded {
+    height: 92px;
 }
 
-ul.playlist > li:hover .buttons {
-    visibility: visible;
+ul.playlist > li .item.expanded .thumbnail-container {
+    width: 92px;
+    height: 92px;
+    margin: 0 10px 0 0;
+    padding:0;
+    border:0;
+    float: left;
+    z-index: 300;
+}
+
+ul.playlist > li .item.expanded img.thumbnail {
+    width: 92px;
+}
+
+ul.playlist > li .buttons {
+    position: relative;
+    left: -3px;
+    margin: 2px 5px 2px 0px;
+    vertical-align: center;
+}
+
+ul.playlist > li button.moveup {
+    position: relative;
+    border: 1px solid #a0a0a0;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+    font-size: 12px;
+    height: 24px;
+    margin: 0px 3px 0px 3px;
+}
+
+ul.playlist > li button.movedown {
+    position: relative;
+    border: 1px solid #a0a0a0;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+    font-size: 12px;
+    height: 24px;
+    margin: 0px 3px 0px 3px;
+}
+
+ul.playlist > li button.remove {
+    position: relative;
+    border: 1px solid #a0a0a0;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+    font-size: 12px;
+    height: 24px;
+    margin: 0px 3px 0px 3px;
 }
 
 .wrapper {
