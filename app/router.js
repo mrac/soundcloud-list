@@ -13,6 +13,10 @@ function(app, Playlist, Search) {
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
+    visiblePercent: 50,
+    VISIBLE_PERCENT_MAX: 50,
+    VISIBLE_PERCENT_MIN: 15,
+    
     routes: {
       // states
       "": "index",
@@ -36,6 +40,7 @@ function(app, Playlist, Search) {
       this.initSoundCloud();
       this.setViews();
       this.setGlobalEvents();
+      this.setJQueryEvents();
     },
 
     /**
@@ -79,6 +84,32 @@ function(app, Playlist, Search) {
         "global:play": this.goPlay,
         "global:pause": this.goPause
       });
+    },
+    
+    /**
+     * Set some jQuery global events.
+     */
+    setJQueryEvents: function() {
+      setTimeout(function() {
+        // Set event for toggling up/down the playlist/searchbox views.
+        jQuery('#top .logo, #top .title').bind("click", function() {
+          var top, bottom;
+          if(this.visiblePercent === this.VISIBLE_PERCENT_MAX) {
+            this.visiblePercent = this.VISIBLE_PERCENT_MIN;
+          } else {
+            this.visiblePercent = this.VISIBLE_PERCENT_MAX;
+          }
+          top = this.visiblePercent;
+          bottom = 100 - top;
+          console.log(top);
+          $('#top').animate({height: top+"%"}, 200);
+          $('#line1').animate({top: top+"%"}, 200);
+          $('#line2').animate({top: top+"%"}, 200);
+          $('#line3').animate({top: top+"%"}, 200);
+          $('#bottom').animate({top: top+"%"}, 200);
+          $('#bottom').animate({height: bottom+"%"}, 200);
+        }.bind(this));
+      }.bind(this), 500);
     },
     
     /**
@@ -133,10 +164,17 @@ function(app, Playlist, Search) {
     
     /**
      * action
-     * @param {String} trackId
+     * @param {String} trackIdentifier
      */
-    add: function(trackId) {
-      this.playlistItems.addById(trackId);
+    add: function(trackIdentifier) {
+      trackIdentifier = trackIdentifier && decodeURIComponent(trackIdentifier);
+      if(trackIdentifier && trackIdentifier.match("/")) {
+        // track path
+        this.playlistItems.addByPath(trackIdentifier);
+      } else {
+        // track id
+        this.playlistItems.addById(trackIdentifier);
+      }
       app.router.navigate("", {trigger: false, replace: true});
     },
         

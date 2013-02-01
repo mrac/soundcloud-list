@@ -103,6 +103,7 @@ function(app, Playlist) {
    * Search list view.
    * @constructor
    * @property {String}   query
+   * @event               render
    */
   Search.Views.List = Backbone.View.extend({
     template: "search/list",
@@ -166,6 +167,7 @@ function(app, Playlist) {
      */
     afterRender: function() {
       this.toggleClearButton();
+      this.trigger("render");
     },
     
     updateInfo: function() {
