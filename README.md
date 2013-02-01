@@ -1,6 +1,5 @@
-
-# What SoundCloud List ? #
-A simple web application for creating locally stored playlists of any audios provided by SoundCloud.com.
+# What is SoundCloud List ? #
+A simple web application for creating locally stored playlists of any audios provided by [SoundCloud](http://soundcloud.com).
 
 # Application URL #
 http://mrac.github.com/soundcloud-list
@@ -25,6 +24,8 @@ It uses some js libraries like:
  - lodash
  - html5 boilerplate
  and many other development tools grouped in [bbb](https://github.com/backbone-boilerplate/grunt-bbb).
+
+The key part is SoundCloud API and [SoundCloud JavaScript SDK](https://developers.soundcloud.com/docs).
 
 # Application bookmarks #
 Soundcloud List remembers application states encoded in URL hashes. We can use the URL links to bring the app in the specific state.
