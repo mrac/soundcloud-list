@@ -430,7 +430,7 @@ function(app) {
     },
     
     events: {
-        "click": "triggerGlobalPlayPause",
+        "click .info-container": "triggerGlobalPlayPause",
         "click .remove": function(ev) {
           if(app.router.isMobile()) {
             // For mobiles hide item and trigger event
@@ -462,7 +462,7 @@ function(app) {
     /**
      * eventhandler
      */
-    triggerGlobalPlayPause: function() {
+    triggerGlobalPlayPause: function(ev) {
       var track;
       if(Playlist.Track.currentTrackId == this.model.get("id")) {
         // If clicked the same track..
@@ -477,6 +477,7 @@ function(app) {
         // If clicked different track, just play.
         app.trigger("global:play", this.model);
       }
+      ev.stopPropagation();
     },
     
     /**

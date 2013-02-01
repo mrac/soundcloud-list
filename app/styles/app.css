@@ -232,7 +232,7 @@ ul.playlist > li .item:hover {
     background-color: #e0e0e0;
 }
 
-ul.playlist > li .item:hover img {
+ul.playlist > li .item .thumbnail-container:hover {
     opacity: 0.5;
 }
 
@@ -382,7 +382,21 @@ footer {
     margin-bottom: 20px;
 }
 
+.author {
+    float: right;
+    margin: 10px 40px 10px 40px;
+    font-size: 10px;
+    color: #a0a0a0;
+}
 
+.author a {
+    color: black;
+    text-decoration: none;
+}
+.author a:hover {
+    color: grey;
+    text-decoration: none;
+}
 
         
 @media only screen and (max-width: 999px) {
