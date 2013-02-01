@@ -11,8 +11,6 @@
             <div class="upperrow">
                 <div class="user"><%= model.get('user').permalink.substr(0,20) %></div>
                 <div class="duration"><%= model.duration() %></div>
-                <!--div class="date"><%= model.get('created_at').substr(0,10) %></div>
-                <div class="genre"><%= model.get('genre') %></div-->
             </div>
             <div class="title"><%= model.get('title').substr(0,30) %></div>
             <% if(model.get('expanded')) { %>

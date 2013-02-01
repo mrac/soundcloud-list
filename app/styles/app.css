@@ -71,6 +71,7 @@ hr {
 
 img.logo {
     margin-bottom: -15px;
+    cursor: pointer;
 }
 
 h2.title {
@@ -79,6 +80,7 @@ h2.title {
     position: relative;
     top: 14px;
     font-size: 22px;
+    cursor: pointer;
 }
 
 h4 {
@@ -104,7 +106,7 @@ input.searchquery {
     border: 1px solid #ccc;
     padding: 9px 90px 8px 9px;
     font-size: 18px;
-    box-shadow: inset 1px 2px 4px rgba(100,100,100,.1)
+    box-shadow: inset 1px 2px 4px rgba(100,100,100,.1);
 }
 
 button.searchbutton {
@@ -397,6 +399,22 @@ footer {
     color: grey;
     text-decoration: none;
 }
+
+/* PLACEHOLDERS */
+
+:-webkit-input-placeholder { /* WebKit browsers */
+    color:    #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #999;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #999;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #999;
+}
+
 
         
 @media only screen and (max-width: 999px) {
