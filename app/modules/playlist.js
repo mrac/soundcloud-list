@@ -411,11 +411,11 @@ function(app) {
           if(app.router.isMobile()) {
             // For mobiles hide item and trigger event
             this.$el.hide();
-            this.model.destroy();
+            this.model.destroy({silent: true});
           } else {
             // For desktops slide item and trigger event
             this.$el.slideUp(300, function() {
-              this.model.destroy();
+              this.model.destroy({silent: true});
             }.bind(this));
           }
           ev.stopPropagation();
@@ -445,6 +445,13 @@ function(app) {
           ev.stopPropagation();
         }
 
+    },
+    
+    /**
+     * Before rendering the item view.
+     */
+    beforeRender: function() {
+      console.log(Date.now() + " - PLAYLIST-item VIEW RENDER!");
     },
     
     /**
