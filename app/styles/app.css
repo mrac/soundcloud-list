@@ -264,8 +264,12 @@ ul.playlist > li .item {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
 .no-touch ul.playlist > li .item:hover {
     background-color: #e0e0e0;
+}
+.no-touch ul.playlist > li .item:hover button {
+    background-color: #cacaca;
 }
 
 .no-touch ul.playlist > li .item .thumbnail-container:hover {
@@ -275,15 +279,31 @@ ul.playlist > li .item {
 ul.playlist > li .item.playing {
     background-color: #a0f0a0;
 }
+ul.playlist > li .item.playing button {
+    background-color: #8ada8a;
+    border-color: #3a8a3a;
+}
 .no-touch ul.playlist > li .item.playing:hover {
     background-color: #90e090;
+}
+.no-touch ul.playlist > li .item.playing:hover button {
+    background-color: #7aca7a;
+    border-color: #2a7a2a;
 }
 
 ul.playlist > li .item.paused {
     background-color: #ffa090;
 }
+ul.playlist > li .item.paused button {
+    background-color: #e98a7a;
+    border-color: #993a2a;
+}
 .no-touch ul.playlist > li .item.paused:hover {
     background-color: #ff9080;
+}
+.no-touch ul.playlist > li .item.paused:hover button {
+    background-color: #e97a6a;
+    border-color: #992a1a;
 }
 
 ul.playlist > li .track {
@@ -360,38 +380,17 @@ ul.playlist > li .buttons {
     vertical-align: center;
 }
 
-ul.playlist > li button.moveup {
+ul.playlist > li button {
     position: relative;
-    border: 1px solid #a0a0a0;
+    border: 1px solid #909090;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    background-color: #f0f0f0;
+    background-color: #e0e0e0;
     font-size: 12px;
     height: 24px;
     margin: 0px 3px 0px 3px;
 }
 
-ul.playlist > li button.movedown {
-    position: relative;
-    border: 1px solid #a0a0a0;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #f0f0f0;
-    font-size: 12px;
-    height: 24px;
-    margin: 0px 3px 0px 3px;
-}
-
-ul.playlist > li button.remove {
-    position: relative;
-    border: 1px solid #a0a0a0;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #f0f0f0;
-    font-size: 12px;
-    height: 24px;
-    margin: 0px 3px 0px 3px;
-}
 
 .wrapper {
     position: relative;
