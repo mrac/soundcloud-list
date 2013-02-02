@@ -1,4 +1,8 @@
-<div class="item <%= model.get('paused') ? ' paused' : '' %><%= (model.get('playing') ? ' playing' : '') %><%= model.get('expanded') ? ' expanded' : '' %>">
+<div class="item <%
+if(model.get('paused')) print(' paused');
+if(model.get('playing')) print(' playing');
+if(model.get('expanded')) print(' expanded');
+%>">
     <div class="track">
         <div class="thumbnail-container">
             <% if(model.get('artwork_url')) { %>
