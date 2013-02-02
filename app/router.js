@@ -102,10 +102,7 @@ function(app, Playlist, Search) {
           top = this.visiblePercent;
           bottom = 100 - top;
           $('#top').animate({height: top+"%"}, 200);
-          $('#line1').animate({top: top+"%"}, 200);
-          $('#line2').animate({top: top+"%"}, 200);
-          $('#line3').animate({top: top+"%"}, 200);
-          $('#bottom').animate({top: top+"%"}, 200);
+          $('.sliding').animate({top: top+"%"}, 200);
           $('#bottom').animate({height: bottom+"%"}, 200);
         }.bind(this));
       }.bind(this), 500);

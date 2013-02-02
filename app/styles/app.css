@@ -34,6 +34,12 @@ body {
     margin: 22px 0 5px 0;
 }
 
+.sliding {
+    position: fixed;
+    width: 100%;
+    top: 50%;
+}
+
 #top {
     top: 0px;
     background-color: white;
@@ -44,11 +50,6 @@ body {
     z-index: 1000;
 }
 
-.line {
-    position: fixed;
-    width: 100%;
-    top: 50%;
-}
 #line1 {
     background-color: black;
     height: 4px;
@@ -70,11 +71,8 @@ body {
 }
 
 #bottom {
-    overflow: scroll;
-    position: fixed;
-    width: 100%;
-    top: 50%;
     height: 50%;
+    overflow: scroll;
 }
 
 
