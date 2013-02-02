@@ -41,7 +41,7 @@ function(app, Playlist, Search) {
       this.initSoundCloud();
       this.setViews();
       this.setGlobalEvents();
-      this.setJQueryEvents();
+      this.initJQuery();
     },
 
     /**
@@ -90,10 +90,15 @@ function(app, Playlist, Search) {
     /**
      * Set some jQuery global events.
      */
-    setJQueryEvents: function() {
+    initJQuery: function() {
       setTimeout(function() {
         // Set event for toggling up/down the playlist/searchbox views.
-        jQuery('#titlebar').bind("click", this.slideSection.bind(this));
+        $("#titlebar").bind("click", this.slideSection.bind(this));
+        
+        // Disable hovering for touch devices.
+        if(this.isTouchScreen()) {
+          $(".hover").removeClass("hover");
+        }
       }.bind(this), 500);
     },
     

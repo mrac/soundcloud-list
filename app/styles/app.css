@@ -178,11 +178,11 @@ ul.searchlist > li .item {
     border-radius: 3px;
 }
 
-ul.searchlist > li .item:hover {
+ul.searchlist > li .item.hover:hover {
     background-color: #e0e0e0;
 }
 
-ul.searchlist > li .item:hover img {
+ul.searchlist > li .item.hover:hover img {
     opacity: 0.5;
 }
 
@@ -264,25 +264,25 @@ ul.playlist > li .item {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
-ul.playlist > li .item:hover {
+ul.playlist > li .item.hover:hover {
     background-color: #e0e0e0;
 }
 
-ul.playlist > li .item .thumbnail-container:hover {
+ul.playlist > li .item .thumbnail-container.hover:hover {
     opacity: 0.5;
 }
 
 ul.playlist > li .item.playing {
     background-color: #a0f0a0;
 }
-ul.playlist > li .item.playing:hover {
+ul.playlist > li .item.playing.hover:hover {
     background-color: #90e090;
 }
 
 ul.playlist > li .item.paused {
     background-color: #ffa090;
 }
-ul.playlist > li .item.paused:hover {
+ul.playlist > li .item.paused.hover:hover {
     background-color: #ff9080;
 }
 
@@ -429,7 +429,7 @@ footer {
     color: black;
     text-decoration: none;
 }
-.author a:hover {
+.author a.hover:hover {
     color: grey;
     text-decoration: none;
 }
@@ -443,77 +443,16 @@ footer {
         
 @media only screen and (max-width: 999px) {
     /* rules that only apply for canvases narrower than 1000px */
-    
-    ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.searchlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.playlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item.playing:hover {
-        background-color: #a0f0a0;
-    }
-    ul.playlist > li .item.paused:hover {
-        background-color: #ffa090;
-    }
-    
 }
 
 @media only screen and (device-width: 768px) and (orientation: landscape) {
     /* rules for iPad in landscape orientation */
-    
-    ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.searchlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.playlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item.playing:hover {
-        background-color: #a0f0a0;
-    }
-    ul.playlist > li .item.paused:hover {
-        background-color: #ffa090;
-    }
-    
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     /* iPhone and Android-Smathphones rules here */
-    
     #mobile-detector {
       display: none;
     }
-    
-    ul.searchlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.searchlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item:hover {
-        background-color: #f6f6f6;
-    }
-    ul.playlist > li .item:hover img {
-        opacity: 1;
-    }
-    ul.playlist > li .item.playing:hover {
-        background-color: #a0f0a0;
-    }
-    ul.playlist > li .item.paused:hover {
-        background-color: #ffa090;
-    }
-    
 }        
     
