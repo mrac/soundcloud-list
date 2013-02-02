@@ -178,11 +178,11 @@ ul.searchlist > li .item {
     border-radius: 3px;
 }
 
-ul.searchlist > li .item.hov:hover {
+.no-touch ul.searchlist > li .item:hover {
     background-color: #e0e0e0;
 }
 
-ul.searchlist > li .item.hov:hover img {
+.no-touch ul.searchlist > li .item:hover img {
     opacity: 0.5;
 }
 
@@ -264,25 +264,25 @@ ul.playlist > li .item {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
-ul.playlist > li .item.hov:hover {
+.no-touch ul.playlist > li .item:hover {
     background-color: #e0e0e0;
 }
 
-ul.playlist > li .item .thumbnail-container.hov:hover {
+.no-touch ul.playlist > li .item .thumbnail-container:hover {
     opacity: 0.5;
 }
 
 ul.playlist > li .item.playing {
     background-color: #a0f0a0;
 }
-ul.playlist > li .item.playing.hov:hover {
+.no-touch ul.playlist > li .item.playing:hover {
     background-color: #90e090;
 }
 
 ul.playlist > li .item.paused {
     background-color: #ffa090;
 }
-ul.playlist > li .item.paused.hov:hover {
+.no-touch ul.playlist > li .item.paused:hover {
     background-color: #ff9080;
 }
 
@@ -429,7 +429,7 @@ footer {
     color: black;
     text-decoration: none;
 }
-.author a.hov:hover {
+.no-touch .author a:hover {
     color: grey;
     text-decoration: none;
 }

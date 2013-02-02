@@ -1,10 +1,10 @@
-<div class="item hov <%
+<div class="item <%
 if(model.get('paused')) print(' paused');
 if(model.get('playing')) print(' playing');
 if(model.get('expanded')) print(' expanded');
 %>">
     <div class="track">
-        <div class="thumbnail-container hov">
+        <div class="thumbnail-container">
             <% if(model.get('artwork_url')) { %>
             <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
             <% } else { %>

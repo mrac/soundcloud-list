@@ -95,9 +95,11 @@ function(app, Playlist, Search) {
         // Set event for toggling up/down the playlist/searchbox views.
         $("#titlebar").bind("click", this.slideSection.bind(this));
         
-        // Disable hovering for touch devices.
+        // Enable css filtering for touch devices.
         if(this.isTouchScreen()) {
-          $(".hov").removeClass("hov");
+          $("#main").addClass("touch");
+        } else {
+          $("#main").addClass("no-touch");
         }
       }.bind(this), 500);
     },
