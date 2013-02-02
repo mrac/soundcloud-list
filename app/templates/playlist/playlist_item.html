@@ -17,13 +17,11 @@ if(model.get('expanded')) print(' expanded');
                 <div class="duration"><%= model.duration() %></div>
             </div>
             <div class="title"><%= model.get('title').substr(0,30) %></div>
-            <% if(model.get('expanded')) { %>
             <div class="buttons">
+                <button class="remove">DEL</button>
                 <button class="moveup">UP</button>
                 <button class="movedown">DOWN</button>
-                <button class="remove">DEL</button>
             </div>
-            <% } %>
         </div>
     </div>
 </div>
