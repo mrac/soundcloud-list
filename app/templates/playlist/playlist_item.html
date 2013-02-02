@@ -16,7 +16,7 @@ if(model.get('expanded')) print(' expanded');
                 <div class="user"><%= model.get('user').permalink.substr(0,20) %></div>
                 <div class="duration"><%= model.duration() %></div>
             </div>
-            <div class="title"><%= model.get('title').substr(0,30) %></div>
+            <div class="title"><%= model.get('title') %></div>
             <div class="buttons">
                 <button class="remove">DEL</button>
                 <button class="moveup">UP</button>

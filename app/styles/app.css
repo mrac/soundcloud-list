@@ -336,6 +336,8 @@ ul.playlist-items > li .title {
     height: 29px;
     font-size: 15px;
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 ul.playlist-items > li .buttons {
