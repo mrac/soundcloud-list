@@ -11,7 +11,8 @@ require.config({
     "underscore": "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min",
     "lodash": "//cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.min",
     "backbone.layoutmanager": "../vendor/jam/backbone.layoutmanager/backbone.layoutmanager.min",
-    "backbone-localStorage": "../vendor/jam/backbone-localStorage/backbone-localStorage.min"
+    "backbone-localStorage": "../vendor/jam/backbone-localStorage/backbone-localStorage.min",
+    "soundcloud-sdk": "//connect.soundcloud.com/sdk"
   },
 
   shim: {
