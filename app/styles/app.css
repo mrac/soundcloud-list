@@ -75,14 +75,14 @@ body {
 #line2 {
     background-color: grey;
     opacity: 0.5;
-    height: 10px;
+    height: 8px;
     z-index: 2001;
 }
 
 #line3 {
     background-color: grey;
     opacity: 0.2;
-    height: 16px;
+    height: 12px;
     z-index: 2002;
 }
 
@@ -101,14 +101,14 @@ body {
 }
 
 img#logo {
-    margin-bottom: -15px;
+    margin: -6px 0px -15px 0px;
 }
 
 h2#title {
     margin: 10px 10px 10px 10px;
     display: inline;
     position: relative;
-    top: 14px;
+    top: 11px;
     font-size: 22px;
 }
 

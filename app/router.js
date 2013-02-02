@@ -13,9 +13,10 @@ function(app, Playlist, Search) {
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
-    visiblePercent: 50,
-    VISIBLE_PERCENT_MAX: 50,
-    VISIBLE_PERCENT_MIN: 15,
+    // Must use either 'px' or '%' units.
+    topSectionHeight: "50%",
+    TOP_SECTION_HEIGHT_MAX: "50%",
+    TOP_SECTION_HEIGHT_MIN: "56px",
     
     routes: {
       // states
@@ -92,20 +93,34 @@ function(app, Playlist, Search) {
     setJQueryEvents: function() {
       setTimeout(function() {
         // Set event for toggling up/down the playlist/searchbox views.
-        jQuery('#titlebar').bind("click", function() {
-          var top, bottom;
-          if(this.visiblePercent === this.VISIBLE_PERCENT_MAX) {
-            this.visiblePercent = this.VISIBLE_PERCENT_MIN;
-          } else {
-            this.visiblePercent = this.VISIBLE_PERCENT_MAX;
-          }
-          top = this.visiblePercent;
-          bottom = 100 - top;
-          $('#top').animate({height: top+"%"}, 200);
-          $('.sliding').animate({top: top+"%"}, 200);
-          $('#bottom').animate({height: bottom+"%"}, 200);
-        }.bind(this));
+        jQuery('#titlebar').bind("click", this.slideSection.bind(this));
       }.bind(this), 500);
+    },
+    
+    /**
+     * Slides top and bottom sections up and down.
+     */
+    slideSection: function() {
+      var topHeight, bottomHeight, topH, bottomH;
+      if(this.topSectionHeight === this.TOP_SECTION_HEIGHT_MAX) {
+        this.topSectionHeight = this.TOP_SECTION_HEIGHT_MIN;
+      } else {
+        this.topSectionHeight = this.TOP_SECTION_HEIGHT_MAX;
+      }
+      topHeight = this.topSectionHeight;
+      if(topHeight.match(/px/)) {
+        topH = topHeight.replace(/px/, "");
+        bottomH = $(window).height() - topH;
+        bottomHeight = bottomH + "px";
+      } else {
+        // presumes '%' if not 'px'
+        topH = topHeight.replace(/\%/, "");
+        bottomH = 100 - topH;
+        bottomHeight = bottomH + "%";
+      }
+      $('#top').animate({height: topHeight}, 200);
+      $('.sliding').animate({top: topHeight}, 200);
+      $('#bottom').animate({height: bottomHeight}, 200);
     },
     
     /**
