@@ -160,6 +160,10 @@ button.clearbutton {
     line-height: normal;
 }
 
+.no-touch .searchbox button:hover {
+    opacity: 0.6;
+}
+
 ul.searchlist {
     padding-left: 0px;
 }
@@ -433,6 +437,9 @@ footer {
     text-decoration: none;
 }
 
+.no-touch .soundcloud-link:hover img {
+    opacity:0.6;
+}
 
 
 
