@@ -424,7 +424,7 @@ function(app) {
    * @constructor
    */
   Playlist.Views.Item = Backbone.View.extend({
-    template: "playlist/item",
+    template: "playlist/playlist_item",
     
     tagName: "li",
     
@@ -515,7 +515,7 @@ function(app) {
    * @constructor
    */
   Playlist.Views.List = Backbone.View.extend({
-    template: "playlist/list",
+    template: "playlist/playlist_list",
     
     className: "playlist-container",
     

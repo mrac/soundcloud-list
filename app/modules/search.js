@@ -61,7 +61,7 @@ function(app, Playlist) {
    * @constructor
    */
   Search.Views.Item = Backbone.View.extend({
-    template: "search/item",
+    template: "search/search_item",
     
     tagName: "li",
     
@@ -106,7 +106,7 @@ function(app, Playlist) {
    * @event               render
    */
   Search.Views.List = Backbone.View.extend({
-    template: "search/list",
+    template: "search/search_list",
     
     className: "search-container",
     
