@@ -3,6 +3,23 @@ body {
     margin: 0;
 }
 
+/* Placeholders. */
+:-webkit-input-placeholder { /* WebKit browsers */
+    color: #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #999;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+}
+
+
+
+
 
 
 /*-------------------- #main ----------------------*/
@@ -15,13 +32,12 @@ body {
 }
 
 #main div {
+    /* No text selection in divs. */
     -webkit-user-select: none; /* Chrome/Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+ */
-    
-    /* Rules below not implemented in browsers yet */
-    -o-user-select: none;
-    user-select: none;
+    -o-user-select: none; /* not implemented in browsers yet */
+    user-select: none; /* not implemented in browsers yet */
 }
 
 #main hr {
@@ -218,6 +234,15 @@ ul.searchlist > li .date {
     float: left;
 }
 
+
+
+
+
+
+
+
+/*-------------------- #bottom ----------------------*/
+
 .playlist-container {
     margin-bottom: 28px;
 }
@@ -409,22 +434,12 @@ footer {
     text-decoration: none;
 }
 
-/* PLACEHOLDERS */
-
-:-webkit-input-placeholder { /* WebKit browsers */
-    color:    #999;
-}
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:    #999;
-}
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    #999;
-}
-:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    #999;
-}
 
 
+
+
+
+/*-------------------- @media ----------------------*/
         
 @media only screen and (max-width: 999px) {
     /* rules that only apply for canvases narrower than 1000px */
@@ -500,11 +515,5 @@ footer {
         background-color: #ffa090;
     }
     
-    
 }        
     
-  
-
-
-
-
