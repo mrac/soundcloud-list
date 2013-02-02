@@ -11,15 +11,6 @@ define([
     root: "/soundcloud-list/"
   };
 
-  // Override fetch method to emit a 'fetch' event.
-  Backbone.Collection.prototype.fetch = (function() {
-    var oldFetch = Backbone.Collection.prototype.fetch;
-    return function() {
-      this.trigger("fetch");
-      return oldFetch.apply(this, arguments);
-    };
-  })();
-
   // Localize or create a new JavaScript Template object.
   var JST = window.JST = window.JST || {};
 
