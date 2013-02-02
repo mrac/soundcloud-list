@@ -97,7 +97,7 @@ function(app, Playlist, Search) {
         
         // Disable hovering for touch devices.
         if(this.isTouchScreen()) {
-          $(".hover").removeClass("hover");
+          $(".hov").removeClass("hov");
         }
       }.bind(this), 500);
     },
