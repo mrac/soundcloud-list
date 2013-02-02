@@ -92,7 +92,7 @@ function(app, Playlist, Search) {
     setJQueryEvents: function() {
       setTimeout(function() {
         // Set event for toggling up/down the playlist/searchbox views.
-        jQuery('#logo, #title').bind("click", function() {
+        jQuery('#titlebar').bind("click", function() {
           var top, bottom;
           if(this.visiblePercent === this.VISIBLE_PERCENT_MAX) {
             this.visiblePercent = this.VISIBLE_PERCENT_MIN;
