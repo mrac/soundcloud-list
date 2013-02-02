@@ -14,7 +14,6 @@ function(app) {
    * ======================================================================================================
    * Track model.
    * @constructor
-   * @event               move
    * @event               play
    * @event               playfinish
    * @event               playstop
@@ -147,7 +146,6 @@ function(app) {
    * ======================================================================================================
    * Playlist collection.
    * @constructor
-   * @event               move
    * @event               play
    * @event               playfinish
    * @event               playstop
@@ -156,6 +154,8 @@ function(app) {
    * @event               pause
    * @event               resume
    * @event               expand
+   * @event               moveUp
+   * @event               moveDown
    */
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
@@ -164,6 +164,11 @@ function(app) {
     
     comparator: function(track) {
       return track.get("ordinal");
+    },
+    
+    initialize: function() {
+      this.on("moveUp", this.moveUp);
+      this.on("moveDown", this.moveDown);
     },
     
     /**
@@ -302,9 +307,9 @@ function(app) {
     },
     
     /**
-     * Move track up.
+     * eventhandler
      */
-    moveUp: function(track) {
+    moveUp: function(track, token) {
       var index = this.indexOf(track);
       var prevTrack;
       var ordinal = track.get("ordinal");
@@ -312,19 +317,18 @@ function(app) {
       if(index > 0) {
         prevTrack = this.at(index-1);
         prevordinal = prevTrack.get("ordinal");
-        prevTrack.set({ordinal: ordinal});
-        track.set({ordinal: prevordinal});
-        track.save();
-        prevTrack.save();
-        this.sort();
-        track.trigger("move", track);
+        prevTrack.set({ordinal: ordinal, silent:true});
+        track.set({ordinal: prevordinal, silent:true});
+        track.save({silent: true});
+        prevTrack.save({silent: true});
+        this.sort({silent: true});
       }
     },
     
     /**
-     * Move track down.
+     * eventhandler
      */
-    moveDown: function(track) {
+    moveDown: function(track, token) {
       var index = this.indexOf(track);
       var nextTrack;
       var ordinal = track.get("ordinal");
@@ -332,12 +336,11 @@ function(app) {
       if(index < this.models.length - 1) {
         nextTrack = this.at(index+1);
         nextordinal = nextTrack.get("ordinal");
-        nextTrack.set({ordinal: ordinal});
-        track.set({ordinal: nextordinal});
-        track.save();
-        nextTrack.save();
-        this.sort();
-        track.trigger("move", track);
+        nextTrack.set({ordinal: ordinal, silent: true});
+        track.set({ordinal: nextordinal, silent: true});
+        track.save({silent: true});
+        nextTrack.save({silent: true});
+        this.sort({silent: true});
       }
     },
     
@@ -418,11 +421,15 @@ function(app) {
           ev.stopPropagation();
         },
         "click .moveup": function(ev) {
-          this.model.collection.moveUp(this.model);
+          var token = Date.now().toString(26);
+          this.$el.addClass(token);
+          this.model.collection.trigger("moveUp", this.model, token);
           ev.stopPropagation();
         },
         "click .movedown": function(ev) {
-          this.model.collection.moveDown(this.model);
+          var token = Date.now().toString(26);
+          this.$el.addClass(token);
+          this.model.collection.trigger("moveDown", this.model, token);
           ev.stopPropagation();
         },
         "click img.thumbnail": function(ev) {
@@ -491,21 +498,24 @@ function(app) {
       this.listenTo(this.collection, {
         "reset": this.render,
         "remove": this.render,
-        "move": this.render,
         "playfinish": this.goPlayNext,
-        "expand": this.collapseAllExpandOne
+        "expand": this.collapseAllExpandOne,
+        "moveUp": this.moveUp,
+        "moveDown": this.moveDown
       });
       
       // Listen to global events.
       this.listenTo(app, {
         "global:addtrack": this.addTrack
       });
+      
     },
 
     /**
      * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
+      console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER!");
       this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
           model: track
@@ -525,9 +535,34 @@ function(app) {
      * eventhandler
      */
     collapseAllExpandOne: function(token) {
-      console.log("collapseAllExpandOne");
       this.$(".expanded").removeClass("expanded");
       this.$("."+token).addClass("expanded").removeClass(token);
+    },
+
+    /**
+     * eventhandler
+     */
+    moveUp: function(track, token) {
+      var $prev, $actual;
+      $actual = this.$(".playlist-items li."+token);
+      $actual.removeClass(token);
+      $prev = $actual.prev();
+      if($prev.length) {
+        $actual.after($prev);
+      }
+    },
+    
+    /**
+     * eventhandler
+     */
+    moveDown: function(track, token) {
+      var $next, $actual;
+      $actual = this.$(".playlist-items li."+token);
+      $actual.removeClass(token);
+      $next = $actual.next();
+      if($next.length) {
+        $actual.before($next);
+      }
     },
     
     /**
