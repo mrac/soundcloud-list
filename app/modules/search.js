@@ -120,9 +120,9 @@ function(app, Playlist) {
     events: {
         // Execute collection methods.
         "click .searchbutton": "goSearch",
-        "keydown .searchquery": "keys",
-        "click .clearbutton": "clearQuery",
-        "keyup .searchquery": "toggleClearButton"
+        "keydown .searchquery": "onKeyDown",
+        "keyup .searchquery": "onKeyUp",
+        "click .clearbutton": "resetSearch",
     },
 
     initialize: function() {
@@ -200,6 +200,18 @@ function(app, Playlist) {
     },
     
     /**
+     * Hide or show the clear button.
+     */
+    toggleClearButton: function() {
+      var query = this.$('.searchquery').val();
+      if(query) {
+        this.$('.clearbutton').removeClass("hidden");
+      } else {
+        this.$('.clearbutton').addClass("hidden");
+      }
+    },
+    
+    /**
      * eventhandler
      */
     goSearch: function() {
@@ -210,7 +222,18 @@ function(app, Playlist) {
     /**
      * eventhandler
      */
-    keys: function(ev) {
+    resetSearch: function() {
+      this.$(".searchquery").val("");
+      this.$('.clearbutton').addClass("hidden");
+      this.goSearch();
+      this.$(".searchquery").focus();
+    },
+    
+    /**
+     * eventhandler
+     */
+    onKeyDown: function(ev) {
+      // Handle enter key.
       if (ev.keyCode === 13) {
         this.goSearch();
       }
@@ -219,21 +242,8 @@ function(app, Playlist) {
     /**
      * eventhandler
      */
-    clearQuery: function() {
-      this.$(".searchquery").val("");
-      this.goSearch();
-    },
-    
-    /**
-     * eventhandler
-     */
-    toggleClearButton: function() {
-      var query = this.$('.searchquery').val();
-      if(query) {
-        this.$('.clearbutton').removeClass("hidden");
-      } else {
-        this.$('.clearbutton').addClass("hidden");
-      }
+    onKeyUp: function() {
+      this.toggleClearButton();
     }
     
     
