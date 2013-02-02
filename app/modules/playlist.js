@@ -517,7 +517,7 @@ function(app) {
   Playlist.Views.List = Backbone.View.extend({
     template: "playlist/playlist_list",
     
-    className: "playlist-container",
+    className: "playlist",
     
     serialize: function() {
         return {

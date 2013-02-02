@@ -108,7 +108,7 @@ function(app, Playlist) {
   Search.Views.List = Backbone.View.extend({
     template: "search/search_list",
     
-    className: "search-container",
+    className: "search",
     
     serialize: function() {
         return {
