@@ -22,8 +22,6 @@ function(app) {
    * @event               playerror
    * @event               pause
    * @event               resume
-   * @event               expand
-   * @event               collapse
    */
   Playlist.Track = Backbone.Model.extend({
     
@@ -32,8 +30,7 @@ function(app) {
     defaults: {
       ordinal: "",
       playing: false,
-      paused: false,
-      expanded: false
+      paused: false
     },
     
     initialize: function() {
@@ -48,8 +45,6 @@ function(app) {
       this.on("playfinish", this.playoff);
       this.on("playstop", this.playoff);
       this.on("playerror", this.pause);
-      this.on("expand", this.expand);
-      this.on("collapse", this.collapse);
     },
     
     /**
@@ -89,17 +84,6 @@ function(app) {
     },
     
     /**
-     * Toggle expand/collapse.
-     */
-    toggleExpand: function() {
-      if(this.get("expanded")) {
-        this.trigger("collapse");
-      } else {
-        this.trigger("expand");
-      }
-    },
-    
-    /**
      * eventhandler
      */
     playon: function() {
@@ -121,27 +105,6 @@ function(app) {
     playoff: function() {
       this.set("playing", false);
       this.set("paused", false);
-    },
-    
-    /**
-     * eventhandler
-     */
-    expand: function() {
-      if(Playlist.Track.currentExpandedTrack) {
-        Playlist.Track.currentExpandedTrack.trigger("collapse");
-      }
-      this.set("expanded", true);
-      Playlist.Track.currentExpandedTrack = this;
-    },
-    
-    /**
-     * eventhandler
-     */
-    collapse: function() {
-      this.set("expanded", false);
-      if(Playlist.Track.currentExpandedTrack === this) {
-        Playlist.Track.currentExpandedTrack = null;
-      }
     }
     
   }, {
@@ -165,12 +128,6 @@ function(app) {
     * @type {SoundManager2.SMSound}
     */
     currentSound: null,
-    
-    /**
-    * Currently expanded track or null.
-    * @type {Playlist.Track}
-    */
-    currentExpandedTrack: null,
     
     /**
      * Unique id used for ordinal.
@@ -199,7 +156,6 @@ function(app) {
    * @event               pause
    * @event               resume
    * @event               expand
-   * @event               collapse
    */
   Playlist.Collection = Backbone.Collection.extend({
     model: Playlist.Track,
@@ -338,8 +294,7 @@ function(app) {
       this.each(function(track) {
         track.set({
           playing: false,
-          paused: false,
-          expanded: false
+          paused: false
         }, {
           silent: true
         });
@@ -444,8 +399,6 @@ function(app) {
         "playing": this.playing,
         "pause": this.render,
         "resume": this.render,
-        "expand": this.render,
-        "collapse": this.render
       });
     },
     
@@ -473,7 +426,15 @@ function(app) {
           ev.stopPropagation();
         },
         "click img.thumbnail": function(ev) {
-          this.model.toggleExpand();
+          var $item = this.$(".item");
+          var token;
+          if($item.hasClass("expanded")) {
+            $item.removeClass("expanded");
+          } else {
+            token = Date.now().toString(26);
+            $item.addClass(token);
+            this.model.collection.trigger("expand", token);
+          }
           ev.stopPropagation();
         }
 
@@ -531,7 +492,8 @@ function(app) {
         "reset": this.render,
         "remove": this.render,
         "move": this.render,
-        "playfinish": this.goPlayNext
+        "playfinish": this.goPlayNext,
+        "expand": this.collapseAllExpandOne
       });
       
       // Listen to global events.
@@ -557,6 +519,15 @@ function(app) {
     goPlayNext: function(trackId) {
       var nextTrackId = this.collection.getNextTrackId(trackId);
       app.router.go("play", nextTrackId);
+    },
+    
+    /**
+     * eventhandler
+     */
+    collapseAllExpandOne: function(token) {
+      console.log("collapseAllExpandOne");
+      this.$(".expanded").removeClass("expanded");
+      this.$("."+token).addClass("expanded").removeClass(token);
     },
     
     /**
