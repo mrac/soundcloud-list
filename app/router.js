@@ -35,7 +35,6 @@ function(app, Playlist, Search) {
       this.playlistItems = new Playlist.Collection();
       this.playlistItems.fetch();
       this.playlistItems.sort();
-      this.playlistItems.clearStatusAll();
 
       // Initializations.
       this.initSoundCloud();
@@ -49,7 +48,11 @@ function(app, Playlist, Search) {
      * @param {...} varargs       Variable number of arguments
      */
     go: function(varargs) {
-      return this.navigate(_.toArray(arguments).join("/"), true);
+      // Deley the routing for slow javascript engines, to perform necessary actions before routing.
+      var path = _.toArray(arguments).join("/");
+      setTimeout(function() {
+        return this.navigate(path, {trigger: true});
+      }.bind(this), 200);
     },
     
     /**
