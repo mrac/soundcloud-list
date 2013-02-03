@@ -15,12 +15,12 @@ function(app) {
    * Track model.
    * @constructor
    * @event               play
-   * @event               playfinish
-   * @event               playstop
-   * @event               playing
-   * @event               playerror
    * @event               pause
    * @event               resume
+   * @event               playfinish
+   * @event               playstop
+   * @event               playerror
+   * @event               playing
    */
   Playlist.Track = Backbone.Model.extend({
     
@@ -44,6 +44,7 @@ function(app) {
       this.on("playfinish", this.playoff);
       this.on("playstop", this.playoff);
       this.on("playerror", this.pause);
+      this.on("playing", this.playing);
     },
     
     /**
@@ -53,6 +54,33 @@ function(app) {
       var ret = Backbone.Model.prototype.clone.apply(this, arguments);
       this.set("ordinal", Playlist.Track.getUniqueId());
       return ret;
+    },
+    
+    /**
+     */
+    getCurrentTrack: function() {
+      return Playlist.Track.currentTrack;
+    },
+    
+    /**
+     */
+    getCurrentTrackId: function() {
+      return Playlist.Track.currentTrackId;
+    },
+    
+    /**
+     */
+    getCurrentSound: function() {
+      return Playlist.Track.currentSound;
+    },
+    
+    /**
+     * @private
+     */
+    _setCurrent: function(trackId, sound) {
+      Playlist.Track.currentTrack = this;
+      Playlist.Track.currentTrackId = trackId;
+      Playlist.Track.currentSound = sound;
     },
     
     /**
@@ -85,25 +113,40 @@ function(app) {
     /**
      * eventhandler
      */
-    playon: function() {
-      this.set("paused", false);
-      this.set("playing", true);
+    playon: function(trackId, sound) {
+      if(sound) {
+        this._setCurrent(trackId, sound);
+      }
+      this.save({
+        playing: true,
+        paused: false
+      });
     },
     
     /**
      * eventhandler
      */
-    pause: function() {
-      this.set("playing", false);
-      this.set("paused", true);
+    pause: function(trackId) {
+      this.save({
+        playing: false,
+        paused: true
+      });
     },
 
     /**
      * eventhandler
      */
-    playoff: function() {
-      this.set("playing", false);
-      this.set("paused", false);
+    playoff: function(trackId) {
+      this.save({
+        playing: false,
+        paused: false
+      });
+    },
+    
+    /**
+     * eventhandler
+     */
+    playing: function(trackId, position, duration) {
     }
     
   }, {
@@ -115,6 +158,12 @@ function(app) {
      * @type {String}
      */
     defaultThumbnail: app.root + "app/img/orange_white_40-94fc761.png",
+    
+    /**
+     * Currently played track.
+     * @type {Playlist.Track}
+     */
+    currentTrack: null,
     
     /**
      * Currently played track id.
@@ -219,8 +268,8 @@ function(app) {
         SC.stream("/tracks/"+trackId, function(sound, err) {
           if(!err) {
             // Stop currently playing track.
-            var prevTrackId = Playlist.Track.currentTrackId;
-            var prevSound = Playlist.Track.currentSound;
+            var prevTrackId = track.getCurrentTrackId();
+            var prevSound = track.getCurrentSound();
             var prevTrack;
             if(prevSound && prevTrackId) {
               prevTrack = thisCollection.getTrackFromId(prevTrackId);
@@ -230,8 +279,6 @@ function(app) {
               }
             }
             // Start new track.
-            Playlist.Track.currentSound = sound;
-            Playlist.Track.currentTrackId = trackId;
             sound.play({
               onfinish: function() {
                 track.trigger("playfinish", trackId);
@@ -240,7 +287,7 @@ function(app) {
                 track.trigger("playing", trackId, this.position, this.duration);
               }
             });
-            track.trigger("play", trackId);
+            track.trigger("play", trackId, sound);
             if(doPause) {
               sound.pause();
               track.trigger("pause", trackId);
@@ -394,14 +441,8 @@ function(app) {
     },
     
     initialize: function() {
-      // Listen to model events.
       this.listenTo(this.model, {
-        "play": this.render,
-        "playfinish": this.render,
-        "playstop": this.render,
-        "playing": this.playing,
-        "pause": this.render,
-        "resume": this.render,
+        "change": this.dynamicRender
       });
     },
     
@@ -439,7 +480,7 @@ function(app) {
             $item.removeClass("expanded");
           } else {
             token = Date.now().toString(26);
-            $item.addClass(token);
+            this.$el.addClass(token);
             this.model.collection.trigger("expand", token);
           }
           ev.stopPropagation();
@@ -451,26 +492,39 @@ function(app) {
      * Before rendering the item view.
      */
     beforeRender: function() {
-      console.log(Date.now() + " - PLAYLIST-item VIEW RENDER!");
+      console.log(Date.now() + " - playlist-item view render");
+    },
+    
+    /**
+     * eventhandler
+     */
+    dynamicRender: function(track) {
+      $item = this.$('.item');
+      $item.toggleClass("playing", track.get("playing"));
+      $item.toggleClass("paused", track.get("paused"));
     },
     
     /**
      * eventhandler
      */
     triggerGlobalPlayPause: function(ev) {
-      var track;
+      var token;
       if(Playlist.Track.currentTrackId == this.model.get("id")) {
         // If clicked the same track..
         if(Playlist.Track.currentSound && Playlist.Track.currentSound.paused) {
           // and it's paused, then play again.
+          this.$(".item").removeClass("paused").addClass("playing");
           app.trigger("global:play", this.model);
         } else {
           // otherwise, pause it.
+          this.$(".item").removeClass("playing").addClass("paused");
           app.trigger("global:pause", this.model);
         }
       } else {
         // If clicked different track, just play.
-        app.trigger("global:play", this.model);
+        token = Date.now().toString(26);
+        this.$el.addClass(token);
+        app.trigger("global:play", this.model, token);
       }
       ev.stopPropagation();
     },
@@ -513,7 +567,8 @@ function(app) {
       
       // Listen to global events.
       this.listenTo(app, {
-        "global:addtrack": this.addTrack
+        "global:addtrack": this.addTrack,
+        "global:play": this.markAsPlaying
       });
       
     },
@@ -522,7 +577,7 @@ function(app) {
      * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
-      console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER!");
+      console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER");
       this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
           model: track
@@ -535,6 +590,7 @@ function(app) {
      */
     goPlayNext: function(trackId) {
       var nextTrackId = this.collection.getNextTrackId(trackId);
+//      this.render();
       app.router.go("play", nextTrackId);
     },
     
@@ -543,7 +599,7 @@ function(app) {
      */
     collapseAllExpandOne: function(token) {
       this.$(".expanded").removeClass("expanded");
-      this.$("."+token).addClass("expanded").removeClass(token);
+      this.$("."+token).find(".item").addClass("expanded").removeClass(token);
     },
 
     /**
@@ -569,6 +625,17 @@ function(app) {
       $next = $actual.next();
       if($next.length) {
         $actual.before($next);
+      }
+    },
+    
+    /**
+     * eventhandler
+     */
+    markAsPlaying: function(track, token) {
+      if(token) {
+        this.$(".playing").removeClass("playing");
+        this.$(".paused").removeClass("paused");
+        this.$("."+token).find(".item").addClass("playing").removeClass(token);
       }
     },
     
