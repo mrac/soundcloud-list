@@ -434,6 +434,10 @@ function(app) {
     
     events: {
         "click .info-container": "triggerGlobalPlayPause",
+        "click .buttons": function(ev) {
+          // Area around buttons does not trigger click.
+          ev.stopPropagation();
+        },
         "click .remove": function(ev) {
           if(app.router.isMobile()) {
             // For mobiles hide item and trigger event
