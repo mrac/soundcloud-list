@@ -340,23 +340,9 @@ function(app) {
     },
     
     /**
-     * Clear status of each track.
-     */
-    clearStatusAll: function() {
-      this.each(function(track) {
-        track.set({
-          playing: false,
-          paused: false
-        }, {
-          silent: true
-        });
-      }, this);
-    },
-    
-    /**
      * eventhandler
      */
-    moveUp: function(track, token) {
+    moveUp: function(track, trackView) {
       var index = this.indexOf(track);
       var prevTrack;
       var ordinal = track.get("ordinal");
@@ -375,7 +361,7 @@ function(app) {
     /**
      * eventhandler
      */
-    moveDown: function(track, token) {
+    moveDown: function(track, trackView) {
       var index = this.indexOf(track);
       var nextTrack;
       var ordinal = track.get("ordinal");
@@ -462,26 +448,19 @@ function(app) {
           ev.stopPropagation();
         },
         "click .moveup": function(ev) {
-          var token = Date.now().toString(26);
-          this.$el.addClass(token);
-          this.model.collection.trigger("moveUp", this.model, token);
+          this.model.collection.trigger("moveUp", this.model, this);
           ev.stopPropagation();
         },
         "click .movedown": function(ev) {
-          var token = Date.now().toString(26);
-          this.$el.addClass(token);
-          this.model.collection.trigger("moveDown", this.model, token);
+          this.model.collection.trigger("moveDown", this.model, this);
           ev.stopPropagation();
         },
         "click img.thumbnail": function(ev) {
           var $item = this.$(".item");
-          var token;
           if($item.hasClass("expanded")) {
             $item.removeClass("expanded");
           } else {
-            token = Date.now().toString(26);
-            this.$el.addClass(token);
-            this.model.collection.trigger("expand", token);
+            this.model.collection.trigger("expand", this);
           }
           ev.stopPropagation();
         }
@@ -499,32 +478,39 @@ function(app) {
      * eventhandler
      */
     dynamicRender: function(track) {
-      $item = this.$('.item');
-      $item.toggleClass("playing", track.get("playing"));
-      $item.toggleClass("paused", track.get("paused"));
+      var modify;
+      if(track) {
+        if(typeof track.get !== "function") {
+          track.get = function(key) { return this[key] };
+          modify = function(key) { return (key in track) };
+        } else {
+          modify = function(key) { return (key in track.attributes) };
+        }
+        var $item = this.$('.item');
+        if(modify("playing")) $item.toggleClass("playing", track.get("playing"));
+        if(modify("paused")) $item.toggleClass("paused", track.get("paused"));
+        if(modify("expanded")) $item.toggleClass("expanded", track.get("expanded"));
+      }
     },
     
     /**
      * eventhandler
      */
     triggerGlobalPlayPause: function(ev) {
-      var token;
       if(Playlist.Track.currentTrackId == this.model.get("id")) {
         // If clicked the same track..
         if(Playlist.Track.currentSound && Playlist.Track.currentSound.paused) {
           // and it's paused, then play again.
-          this.$(".item").removeClass("paused").addClass("playing");
+          this.dynamicRender({ playing: true, paused: false });
           app.trigger("global:play", this.model);
         } else {
           // otherwise, pause it.
-          this.$(".item").removeClass("playing").addClass("paused");
+          this.dynamicRender({ playing: false, paused: true });
           app.trigger("global:pause", this.model);
         }
       } else {
         // If clicked different track, just play.
-        token = Date.now().toString(26);
-        this.$el.addClass(token);
-        app.trigger("global:play", this.model, token);
+        app.trigger("global:play", this.model, this);
       }
       ev.stopPropagation();
     },
@@ -588,27 +574,39 @@ function(app) {
     /**
      * eventhandler
      */
-    goPlayNext: function(trackId) {
-      var nextTrackId = this.collection.getNextTrackId(trackId);
-//      this.render();
-      app.router.go("play", nextTrackId);
-    },
-    
-    /**
-     * eventhandler
-     */
-    collapseAllExpandOne: function(token) {
-      this.$(".expanded").removeClass("expanded");
-      this.$("."+token).find(".item").addClass("expanded").removeClass(token);
+    dynamicRender: function(track, trackView) {
+      this.dynamicClear(track);
+      trackView.dynamicRender(track);
     },
 
     /**
      * eventhandler
      */
-    moveUp: function(track, token) {
+    dynamicClear: function(track) {
+      var modify;
+      if(typeof track.get !== "function") {
+        modify = function(key) { return (key in track) };
+      } else {
+        modify = function(key) { return (key in track.attributes) };
+      }
+      if(modify("playing")) this.$(".playing").removeClass("playing");
+      if(modify("paused")) this.$(".paused").removeClass("paused");
+      if(modify("expanded")) this.$(".expanded").removeClass("expanded");
+    },
+    
+    /**
+     * eventhandler
+     */
+    collapseAllExpandOne: function(trackView) {
+      this.dynamicRender({expanded: true}, trackView);
+    },
+
+    /**
+     * eventhandler
+     */
+    moveUp: function(track, trackView) {
       var $prev, $actual;
-      $actual = this.$(".playlist-items li."+token);
-      $actual.removeClass(token);
+      $actual = trackView.$el;
       $prev = $actual.prev();
       if($prev.length) {
         $actual.after($prev);
@@ -618,10 +616,9 @@ function(app) {
     /**
      * eventhandler
      */
-    moveDown: function(track, token) {
+    moveDown: function(track, trackView) {
       var $next, $actual;
-      $actual = this.$(".playlist-items li."+token);
-      $actual.removeClass(token);
+      $actual = trackView.$el;
       $next = $actual.next();
       if($next.length) {
         $actual.before($next);
@@ -631,11 +628,17 @@ function(app) {
     /**
      * eventhandler
      */
-    markAsPlaying: function(track, token) {
-      if(token) {
-        this.$(".playing").removeClass("playing");
-        this.$(".paused").removeClass("paused");
-        this.$("."+token).find(".item").addClass("playing").removeClass(token);
+    goPlayNext: function(trackId) {
+      var nextTrackId = this.collection.getNextTrackId(trackId);
+      app.router.go("play", nextTrackId);
+    },
+    
+    /**
+     * eventhandler
+     */
+    markAsPlaying: function(track, trackView) {
+      if(trackView) {
+        this.dynamicRender({playing: true, paused: false}, trackView);
       }
     },
     
