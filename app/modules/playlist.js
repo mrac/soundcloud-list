@@ -154,12 +154,6 @@ function(app) {
     // Class members.
 
     /**
-     * Default thumbnail.
-     * @type {String}
-     */
-    defaultThumbnail: app.root + "app/img/orange_white_40-94fc761.png",
-    
-    /**
      * Currently played track.
      * @type {Playlist.Track}
      */
@@ -421,8 +415,7 @@ function(app) {
     
     serialize: function() {
       return {
-        model: this.model,
-        defaultThumbnail: Playlist.Track.defaultThumbnail
+        model: this.model
       };
     },
     
@@ -459,7 +452,7 @@ function(app) {
           this.model.collection.trigger("moveDown", this.model, this);
           ev.stopPropagation();
         },
-        "click img.thumbnail": function(ev) {
+        "click .thumbnail-container": function(ev) {
           var $item = this.$(".item");
           if($item.hasClass("expanded")) {
             $item.removeClass("expanded");

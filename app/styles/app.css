@@ -286,16 +286,13 @@ ul.playlist-items > li .track {
 ul.playlist-items > li .thumbnail-container {
     width: 47px;
     height: 47px;
+    background-image: url('/soundcloud-list/app/img/orange_white_47.png');
+    background-size: 47px 47px;
     float: left;
-}
-
-ul.playlist-items > li .thumbnail-container img {
-    width: 47px;
-    height: 47px;
     cursor: pointer;
 }
 
-.no-touch ul.playlist-items > li .thumbnail-container img:hover {
+.no-touch ul.playlist-items > li .thumbnail-container:hover {
     opacity: 0.5;
 }
 
@@ -367,14 +364,11 @@ ul.playlist-items > li .item.expanded .track {
 ul.playlist-items > li .item.expanded .thumbnail-container {
     width: 92px;
     height: 92px;
+    background-size: 92px 92px;
+    background-image: url('/soundcloud-list/app/img/orange_white_92.png');
 }
 
-ul.playlist-items > li .item.expanded .thumbnail-container img {
-    width: 92px;
-    height: 92px;
-}
-
-.no-touch ul.playlist-items > li .item.expanded .thumbnail-container img:hover {
+.no-touch ul.playlist-items > li .item.expanded .thumbnail-container:hover {
 }
 
 ul.playlist-items > li .item.expanded .info-container {

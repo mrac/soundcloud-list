@@ -4,13 +4,11 @@ if(model.get('playing')) print(' playing');
 if(model.get('expanded')) print(' expanded');
 %>">
     <div class="track">
-        <div class="thumbnail-container">
-            <% if(model.get('artwork_url')) { %>
-            <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
-            <% } else { %>
-            <img class="thumbnail" src="<%= defaultThumbnail %>" />
-            <% } %>
-        </div>
+        <% if(model.get('artwork_url')) { %>
+        <div class="thumbnail-container" style="background-image: url('<%= model.get('artwork_url') %>')" />
+        <% } else { %>
+        <div class="thumbnail-container" />
+        <% } %>
         <div class="info-container">
             <div class="upperrow">
                 <div class="user"><%= model.get('user').permalink.substr(0,20) %></div>
