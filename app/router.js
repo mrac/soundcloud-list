@@ -43,6 +43,7 @@ function(app, Playlist, Search) {
       this.setViews();
       this.setGlobalEvents();
       this.initJQuery();
+      this.fixIPhoneScrolling();
     },
 
     /**
@@ -145,6 +146,31 @@ function(app, Playlist, Search) {
       return ($('#mobile-detector').css('display') == "none");
     },
     
+    /**
+     * Prevents iPhone rubber effect while scrolling.
+     */
+    fixIPhoneScrolling: function() {
+      setTimeout(function() {
+        $(".scroll").each(function(index, elem) {
+          elem.addEventListener('touchstart', function(event){
+            if(elem.offsetHeight === elem.scrollHeight) {
+              event.preventDefault();
+            } else {
+              startY = event.touches[0].pageY;
+              startTopScroll = elem.scrollTop;
+              if(startTopScroll <= 0) elem.scrollTop = 1;
+              if(startTopScroll + elem.offsetHeight >= elem.scrollHeight) {
+                elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
+              }
+            }
+          }, false);
+        });
+        $(document).on("touchstart", ".no-scroll", function(ev) {
+          ev.preventDefault();
+        });        
+      }.bind(this), 500);
+    },
+
     /**
      * Checks if the device has a touch-screen.
      */
