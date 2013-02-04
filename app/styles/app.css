@@ -415,7 +415,7 @@ ul.playlist-items > li .item.expanded .title {
 ul.playlist-items > li .item.expanded .buttons {
     height: 49px;
     display: block;
-    padding: 6px 15px 2px 10px;
+    padding: 5px 10px 3px 10px;
     cursor: default;
     float: left;
 }
@@ -423,7 +423,7 @@ ul.playlist-items > li .item.expanded .buttons {
 ul.playlist-items > li .item.expanded .more {
     height: 49px;
     display: block;
-    padding: 6px 5px 2px 10px;
+    padding: 6px 5px 2px 15px;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -435,7 +435,7 @@ ul.playlist-items > li .item.expanded .buttons button {
     border-radius: 3px;
     background-color: #e0e0e0;
     font-size: 12px;
-    height: 35px;
+    height: 40px;
     width: 62px;
     margin: 0px;
     cursor: pointer;
