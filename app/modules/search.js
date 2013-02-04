@@ -140,11 +140,7 @@ function(app, Playlist) {
         },
         "remove": function() {
           this.updateInfo();
-          if(this.info) {
-            this.$(".info").removeClass("hidden").text(this.info);
-          } else {
-            this.$(".info").addClass("hidden");
-          }
+          this.dynamicRenderInfo();
         }
       });
       
@@ -169,7 +165,9 @@ function(app, Playlist) {
       this.toggleClearButton();
       this.trigger("render");
     },
-    
+
+    /**
+     */
     updateInfo: function() {
       if(this.query) {
         if(this.collection.length) {
@@ -179,6 +177,16 @@ function(app, Playlist) {
         }
       } else {
         this.info = "";
+      }
+    },
+    
+    /**
+     */
+    dynamicRenderInfo: function() {
+      if(this.info) {
+        this.$(".info").removeClass("hidden").text(this.info);
+      } else {
+        this.$(".info").addClass("hidden");
       }
     },
     

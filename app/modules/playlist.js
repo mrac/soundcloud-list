@@ -435,10 +435,14 @@ function(app) {
           if(app.router.isMobile()) {
             // For mobiles hide item and trigger event
             this.$el.hide();
+            this.$el.remove();
+            this.model.collection.sort();
             this.model.destroy({silent: true});
           } else {
             // For desktops slide item and trigger event
             this.$el.slideUp(app.router.ANIM_DURATION, function() {
+              this.$el.remove();
+              this.model.collection.sort();
               this.model.destroy({silent: true});
             }.bind(this));
           }
@@ -533,7 +537,7 @@ function(app) {
     
     serialize: function() {
         return {
-            count: this.collection.length
+            text: this.text
         };
     },
     
@@ -541,7 +545,8 @@ function(app) {
       // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": this.render,
-        "remove": this.render,
+        "remove": this.deleteItem,
+        "destroy": this.deleteItem,
         "playfinish": this.goPlayNext,
         "expand": this.collapseAllExpandOne,
         "moveUp": this.moveUp,
@@ -561,11 +566,28 @@ function(app) {
      */
     beforeRender: function() {
       console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER");
+      this.updateText();
       this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
           model: track
         }));
       }, this);
+    },
+    
+    /**
+     */
+    updateText: function() {
+      if(this.collection.length) {
+        this.text = this.collection.length + " tracks in your playlist";
+      } else {
+        this.text = "Your playlist is empty";
+      }
+    },
+    
+    /**
+     */
+    dynamicRenderText: function() {
+      this.$(".text").text(this.text || "");
     },
     
     /**
@@ -607,6 +629,15 @@ function(app) {
       var actualZIndex, prevZIndex;
       $actual = trackView.$el;
       $prev = $actual.prev();
+        
+      // activate button
+      $actual.find(".moveup").addClass("active");
+      if(trackView.movingActive) clearTimeout(trackView.movingActive);
+      this.movingActive = setTimeout(function() {
+        $actual.find(".moveup").removeClass("active");
+        delete trackView.movingActive;
+      }.bind(this), 500);
+        
       if($prev.length) {
         if(app.router.isMobile()) {
           $actual.after($prev);
@@ -639,6 +670,15 @@ function(app) {
       var actualZIndex, nextZIndex;
       $actual = trackView.$el;
       $next = $actual.next();
+      
+        // activate button
+        $actual.find(".movedown").addClass("active");
+        if(trackView.movingActive) clearTimeout(trackView.movingActive);
+        this.movingActive = setTimeout(function() {
+          $actual.find(".movedown").removeClass("active");
+          delete trackView.movingActive;
+        }.bind(this), 500);
+      
       if($next.length) {
         if(app.router.isMobile()) {
           $actual.before($next);
@@ -662,6 +702,14 @@ function(app) {
       }
     },
     
+    /**
+     * eventhandler
+     */
+    deleteItem: function() {
+      this.updateText();
+      this.dynamicRenderText();
+    },
+
     /**
      * eventhandler
      */

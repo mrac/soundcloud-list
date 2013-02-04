@@ -165,7 +165,8 @@ button.clearbutton {
     line-height: normal;
 }
 
-.no-touch .searchbox button:hover {
+.no-touch .searchbox button:hover,
+.searchbox button.active {
     opacity: 0.6;
 }
 
@@ -188,11 +189,13 @@ ul.search-items > li .item {
     border-radius: 3px;
 }
 
-.no-touch ul.search-items > li .item:hover {
+.no-touch ul.search-items > li .item:hover,
+ul.search-items > li .item.active {
     background-color: #e0e0e0;
 }
 
-.no-touch ul.search-items > li .item:hover img {
+.no-touch ul.search-items > li .item:hover img,
+ul.search-items > li .item.active img {
     opacity: 0.5;
 }
 
@@ -304,7 +307,8 @@ ul.playlist-items > li .thumbnail-container {
     cursor: pointer;
 }
 
-.no-touch ul.playlist-items > li .thumbnail-container:hover {
+.no-touch ul.playlist-items > li .thumbnail-container:hover,
+ul.playlist-items > li .thumbnail-container.active {
     opacity: 0.5;
 }
 
@@ -315,7 +319,8 @@ ul.playlist-items > li .info-container {
     cursor: pointer;
 }
 
-.no-touch ul.playlist-items > li .info-container:hover {
+.no-touch ul.playlist-items > li .info-container:hover,
+ul.playlist-items > li .info-container.active {
     background-color: #e0e0e0;
 }
 
@@ -380,7 +385,8 @@ ul.playlist-items > li .item.expanded .thumbnail-container {
     background-image: url('/soundcloud-list/app/img/orange_white_92.png');
 }
 
-.no-touch ul.playlist-items > li .item.expanded .thumbnail-container:hover {
+.no-touch ul.playlist-items > li .item.expanded .thumbnail-container:hover,
+ul.playlist-items > li .item.expanded .thumbnail-container.active {
 }
 
 ul.playlist-items > li .item.expanded .info-container {
@@ -388,7 +394,8 @@ ul.playlist-items > li .item.expanded .info-container {
     margin-left:92px;
 }
 
-.no-touch ul.playlist-items > li .item.expanded .info-container:hover {
+.no-touch ul.playlist-items > li .item.expanded .info-container:hover,
+ul.playlist-items > li .item.expanded .info-container.active {
 }
 
 ul.playlist-items > li .item.expanded .upperrow {
@@ -445,11 +452,13 @@ ul.playlist-items > li .item.expanded .buttons button.remove {
     margin-right: 12px;
 }
 
-.no-touch ul.playlist-items > li .item.expanded .info-container:hover .buttons button {
+.no-touch ul.playlist-items > li .item.expanded .info-container:hover .buttons button,
+ul.playlist-items > li .item.expanded .info-container.active .buttons button {
     background-color: #cacaca;
 }
 
-.no-touch ul.playlist-items > li .item.expanded .info-container .buttons button:hover {
+.no-touch ul.playlist-items > li .item.expanded .info-container .buttons button:hover,
+ul.playlist-items > li .item.expanded .info-container .buttons button.active {
     background-color: #bababa;
 }
 
@@ -464,36 +473,42 @@ ul.playlist-items > li .item.expanded .buttons button.remove {
 ul.playlist-items > li .item.playing .info-container {
     background-color: #a0f0a0;
 }
-.no-touch ul.playlist-items > li .item.playing .info-container:hover {
+.no-touch ul.playlist-items > li .item.playing .info-container:hover,
+ul.playlist-items > li .item.playing .info-container.active {
     background-color: #90e090;
 }
 ul.playlist-items > li .item.playing .buttons button {
     background-color: #8ada8a;
     border-color: #3a8a3a;
 }
-.no-touch ul.playlist-items > li .item.playing .info-container:hover .buttons button {
+.no-touch ul.playlist-items > li .item.playing .info-container:hover .buttons button,
+ul.playlist-items > li .item.playing .info-container.active .buttons button {
     background-color: #7aca7a;
     border-color: #2a7a2a;
 }
-.no-touch ul.playlist-items > li .item.playing .info-container .buttons button:hover {
+.no-touch ul.playlist-items > li .item.playing .info-container .buttons button:hover,
+ul.playlist-items > li .item.playing .info-container .buttons button.active {
     background-color: #6aba6a;
 }
 
 ul.playlist-items > li .item.paused .info-container {
     background-color: #ffa090;
 }
-.no-touch ul.playlist-items > li .item.paused .info-container:hover {
+.no-touch ul.playlist-items > li .item.paused .info-container:hover,
+ul.playlist-items > li .item.paused .info-container.active {
     background-color: #ff9080;
 }
 ul.playlist-items > li .item.paused .buttons button {
     background-color: #e98a7a;
     border-color: #993a2a;
 }
-.no-touch ul.playlist-items > li .item.paused .info-container:hover .buttons button {
+.no-touch ul.playlist-items > li .item.paused .info-container:hover .buttons button,
+ul.playlist-items > li .item.paused .info-container.active .buttons button {
     background-color: #e97a6a;
     border-color: #992a1a;
 }
-.no-touch ul.playlist-items > li .item.paused .info-container .buttons button:hover {
+.no-touch ul.playlist-items > li .item.paused .info-container .buttons button:hover,
+ul.playlist-items > li .item.paused .info-container .buttons button.active {
     background-color: #d96a5a;
 }
 
@@ -534,12 +549,14 @@ footer {
     color: black;
     text-decoration: none;
 }
-.no-touch .author a:hover {
+.no-touch .author a:hover,
+.author a.active {
     color: grey;
     text-decoration: none;
 }
 
-.no-touch .soundcloud-link:hover img {
+.no-touch .soundcloud-link:hover img,
+.soundcloud-link.active img {
     opacity:0.6;
 }
 
