@@ -47,7 +47,7 @@ body {
 }
 
 #main h4 {
-    margin: 22px 0 5px 0;
+    margin: 0;
 }
 
 .sliding {
@@ -117,8 +117,13 @@ h2#title {
     margin-bottom: 24px;
 }
 
+.search-container .infobar {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
 .searchbox {
-    margin: 20px 0px 13px 0px;
+    margin: 10px 0px 10px 0px;
     width: 60%; /*208px;*/
     height: 40px;
     position: relative;
@@ -165,6 +170,7 @@ button.clearbutton {
 }
 
 ul.search-items {
+    margin-top: 10px;
     padding-left: 0px;
 }
 
@@ -251,7 +257,13 @@ ul.search-items > li .date {
     margin-bottom: 28px;
 }
 
+.playlist-container .textbar {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
 ul.playlist-items {
+    margin-top: 10px;
     padding-left: 0px;
 }
 

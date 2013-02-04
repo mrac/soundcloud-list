@@ -16,7 +16,7 @@ function(app, Playlist, Search) {
     // Must use either 'px' or '%' units.
     topSectionHeight: "50%",
     TOP_SECTION_HEIGHT_MAX: "50%",
-    TOP_SECTION_HEIGHT_MIN: "56px",
+    TOP_SECTION_HEIGHT_MIN: "49px",
     ANIM_DURATION: 100,
 
     
