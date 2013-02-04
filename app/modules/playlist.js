@@ -438,7 +438,7 @@ function(app) {
             this.model.destroy({silent: true});
           } else {
             // For desktops slide item and trigger event
-            this.$el.slideUp(300, function() {
+            this.$el.slideUp(app.router.ANIM_DURATION, function() {
               this.model.destroy({silent: true});
             }.bind(this));
           }
@@ -603,10 +603,30 @@ function(app) {
      */
     moveUp: function(track, trackView) {
       var $prev, $actual;
+      var topDif, leftDif, widthDif, heightDif;
+      var actualZIndex, prevZIndex;
       $actual = trackView.$el;
       $prev = $actual.prev();
       if($prev.length) {
-        $actual.after($prev);
+        if(app.router.isMobile()) {
+          $actual.after($prev);
+        } else {
+          // dynamic effect
+          actualZIndex = $actual.css("zIndex");
+          prevZIndex = $prev.css("zIndex");
+          $actual.css({ position: "relative", zIndex: 101 });
+          $prev.css({ position: "relative", zIndex: 100 });
+          topDif = $actual.offset().top - $prev.offset().top;
+          leftDif = $actual.offset().left - $prev.offset().left;
+          heightDif = $actual.height() - $prev.height();
+          $prev.animate({ top: topDif + heightDif, left: leftDif + widthDif }, app.router.ANIM_DURATION);
+          $actual.animate({ top: -topDif, left: -leftDif }, app.router.ANIM_DURATION, function() {
+            $prev.css({ top: 0, left: 0, position: "static", "zIndex": prevZIndex });
+            $actual.css({ top: 0, left: 0, position: "static", "zIndex": actualZIndex });
+            // static effect
+            $actual.after($prev);
+          });
+        }
       }
     },
     
@@ -615,10 +635,30 @@ function(app) {
      */
     moveDown: function(track, trackView) {
       var $next, $actual;
+      var topDif, leftDif, widthDif, heightDif;
+      var actualZIndex, nextZIndex;
       $actual = trackView.$el;
       $next = $actual.next();
       if($next.length) {
-        $actual.before($next);
+        if(app.router.isMobile()) {
+          $actual.before($next);
+        } else {
+          // dynamic effect
+          actualZIndex = $actual.css("zIndex");
+          nextZIndex = $next.css("zIndex");
+          $actual.css({ position: "relative", zIndex: 101 });
+          $next.css({position: "relative", zIndex: 100 });
+          topDif = $next.offset().top - $actual.offset().top;
+          leftDif = $next.offset().left - $actual.offset().left;
+          heightDif = $next.height() - $actual.height();
+          $next.animate({ top: -topDif, left: -leftDif }, app.router.ANIM_DURATION);
+          $actual.animate({ top: topDif + heightDif, left: leftDif + widthDif}, app.router.ANIM_DURATION, function() {
+            $next.css({ top: 0, left: 0, position: "static", "zIndex": nextZIndex });
+            $actual.css({ top: 0, left: 0, position: "static", "zIndex": actualZIndex });
+            // static effect
+            $actual.before($next);
+          });
+        }
       }
     },
     

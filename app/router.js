@@ -17,6 +17,8 @@ function(app, Playlist, Search) {
     topSectionHeight: "50%",
     TOP_SECTION_HEIGHT_MAX: "50%",
     TOP_SECTION_HEIGHT_MIN: "56px",
+    ANIM_DURATION: 100,
+
     
     routes: {
       // states

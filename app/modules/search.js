@@ -87,7 +87,7 @@ function(app, Playlist) {
         this.model.collection.remove(this.model);
       } else {
         // For desktops slide item and trigger event
-        this.$el.slideUp(100, function() {
+        this.$el.slideUp(app.router.ANIM_DURATION, function() {
           this.model.collection.remove(this.model);
         }.bind(this));
       }
