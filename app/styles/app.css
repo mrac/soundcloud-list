@@ -75,14 +75,14 @@ body {
 #line2 {
     background-color: grey;
     opacity: 0.5;
-    height: 8px;
+    height: 7px;
     z-index: 2001;
 }
 
 #line3 {
     background-color: grey;
     opacity: 0.2;
-    height: 12px;
+    height: 10px;
     z-index: 2002;
 }
 
