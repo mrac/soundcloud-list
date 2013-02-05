@@ -1,18 +1,21 @@
 <div class="item">
     <div class="track">
-        <div class="thumbnail-container">
-            <% if(model.get('artwork_url')) { %>
-            <img class="thumbnail" src="<%= model.get('artwork_url') %>" />
-            <% } else { %>
-            <img class="thumbnail" src="<%= defaultThumbnail %>" />
-            <% } %>
-        </div>
+        <% if(model.get('artwork_url')) { %>
+        <div class="thumbnail-container" style="background-image: url('<%= model.get('artwork_url') %>')" />
+        <% } else { %>
+        <div class="thumbnail-container" />
+        <% } %>
         <div class="info-container">
             <div class="upperrow">
                 <div class="user"><%= model.get('user').permalink.substr(0,20) %></div>
                 <div class="duration"><%= model.duration() %></div>
             </div>
-            <div class="title"><%= model.get('title').substr(0,30) %></div>
-        </div>    
+            <div class="title"><%= model.get('title') %></div>
+            <div class="buttons">
+                <button class="remove">DEL</button>
+                <button class="moveup">UP</button>
+                <button class="movedown">DOWN</button>
+            </div>
+        </div>
     </div>
 </div>
