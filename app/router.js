@@ -41,8 +41,9 @@ function(app, Playlist, Search) {
       // Initializations.
       this.initSoundCloud();
       this.setViews();
+      this.initViewsToggle();
       this.setGlobalEvents();
-      this.initJQuery();
+      this.setTouchClass();
       this.fixIPhoneScrolling();
     },
 
@@ -94,20 +95,22 @@ function(app, Playlist, Search) {
     },
     
     /**
-     * Set some jQuery global events.
+     * Set event for toggling up/down the playlist/searchbox views.
      */
-    initJQuery: function() {
-      setTimeout(function() {
-        // Set event for toggling up/down the playlist/searchbox views.
-        $("#titlebar").bind("click", this.slideSection.bind(this));
-        
-        // Enable css filtering for touch devices.
-        if(this.isTouchScreen()) {
-          $("#main").addClass("touch");
-        } else {
-          $("#main").addClass("no-touch");
-        }
-      }.bind(this), 500);
+    initViewsToggle: function() {
+      $(document).on("click", "#titlebar", this.slideSection.bind(this));
+    },
+    
+    /**
+     * Enable css filtering for touch devices.
+     */
+    setTouchClass: function() {
+      if(this.isTouchScreen()) {
+        $("#main").addClass("touch");
+        alert($("main").length);
+      } else {
+        $("#main").addClass("no-touch");
+      }
     },
     
     /**
