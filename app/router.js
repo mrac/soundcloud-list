@@ -39,10 +39,13 @@ function(app, Playlist, Search) {
       this.playlistItems.sort();
 
       // Initializations.
-      this.initSoundCloud();
       this.setViews();
-      this.initViewsToggle();
+      this.initSoundCloud();
       this.setGlobalEvents();
+
+      // Mobile/tablets hacks.
+      this.initFastClick();
+      this.initViewsToggle();
       this.setTouchClass();
       this.fixIPhoneScrolling();
     },
@@ -107,7 +110,6 @@ function(app, Playlist, Search) {
     setTouchClass: function() {
       if(this.isTouchScreen()) {
         $("#main").addClass("touch");
-        alert($("main").length);
       } else {
         $("#main").addClass("no-touch");
       }
@@ -150,11 +152,18 @@ function(app, Playlist, Search) {
     },
     
     /**
+     * Fixes iPhone click delay.
+     */
+    initFastClick: function() {
+      new FastClick(document.body);
+    },
+    
+    /**
      * Prevents iPhone rubber effect while scrolling.
      */
     fixIPhoneScrolling: function() {
       // Scrollable elements should be marked via "scroll" class
-      $(document).on("touchstart", ".scroll", function(ev) {
+      $(document).on("touchmove", ".scroll", function(ev) {
         if(this.offsetHeight === this.scrollHeight) {
           ev.preventDefault();
         } else {

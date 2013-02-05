@@ -12,7 +12,8 @@ require.config({
     "lodash": "//cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.min",
     "backbone.layoutmanager": "../vendor/jam/backbone.layoutmanager/backbone.layoutmanager.min",
     "backbone-localStorage": "../vendor/jam/backbone-localStorage/backbone-localStorage.min",
-    "soundcloud-sdk": "//connect.soundcloud.com/sdk"
+    "soundcloud-sdk": "//connect.soundcloud.com/sdk",
+    "fastclick": "../vendor/js/libs/fastclick.min"
   },
 
   shim: {
