@@ -255,6 +255,14 @@ ul.search-items > li .title {
     overflow: hidden;
 }
 
+ul.search-items > li .buttons {
+    display: none;
+}
+
+ul.search-items > li .more {
+    display: none;
+}
+
 
 
 
