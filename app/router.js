@@ -165,9 +165,9 @@ function(app, Playlist, Search) {
             }
           }, false);
         });
-        $(document).on("touchstart", ".no-scroll", function(ev) {
+        $(document).on("touchmove", ".no-scroll", function(ev) {
           ev.preventDefault();
-        });        
+        });
       }.bind(this), 500);
     },
 
