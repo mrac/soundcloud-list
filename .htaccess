@@ -4,4 +4,10 @@ RewriteEngine On
 #RewriteCond %{REQUEST_FILENAME} !-d
 # example.com/home => example.com/#home
 #RewriteRule ^(.*)$ /soundcloud-list/#$1 [L,NC,R,NE]
-
+<filesMatch ".(html|htm|js|css)$">
+FileETag None
+Header unset ETag
+Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+Header set Pragma "no-cache"
+Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+</filesMatch>
