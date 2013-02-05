@@ -150,25 +150,23 @@ function(app, Playlist, Search) {
      * Prevents iPhone rubber effect while scrolling.
      */
     fixIPhoneScrolling: function() {
-      setTimeout(function() {
-        $(".scroll").each(function(index, elem) {
-          elem.addEventListener('touchstart', function(event){
-            if(elem.offsetHeight === elem.scrollHeight) {
-              event.preventDefault();
-            } else {
-              startY = event.touches[0].pageY;
-              startTopScroll = elem.scrollTop;
-              if(startTopScroll <= 0) elem.scrollTop = 1;
-              if(startTopScroll + elem.offsetHeight >= elem.scrollHeight) {
-                elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
-              }
-            }
-          }, false);
-        });
-        $(document).on("touchmove", ".no-scroll", function(ev) {
+      // Scrollable elements should be marked via "scroll" class
+      $(document).on("touchstart", ".scroll", function(ev) {
+        if(this.offsetHeight === this.scrollHeight) {
           ev.preventDefault();
-        });
-      }.bind(this), 500);
+        } else {
+          startY = ev.originalEvent.touches[0].pageY;
+          startTopScroll = this.scrollTop;
+          if(startTopScroll <= 0) this.scrollTop = 1;
+          if(startTopScroll + this.offsetHeight >= this.scrollHeight) {
+            this.scrollTop = this.scrollHeight - this.offsetHeight - 1;
+          }
+        }
+      });
+      // Elements non-scrollable (like inputs) should be marked via "no-scroll" class
+      $(document).on("touchmove", ".no-scroll", function(ev) {
+        ev.preventDefault();
+      });
     },
 
     /**
