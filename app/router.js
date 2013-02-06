@@ -21,6 +21,8 @@ function(app, Playlist, Search) {
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
+    ANIM_DURATION: 100,
+    
     routes: {
       // States.
       "":                 "_index",
@@ -104,7 +106,6 @@ function(app, Playlist, Search) {
     _topSectionHeight: "50%",
     _TOP_SECTION_HEIGHT_MAX: "50%",
     _TOP_SECTION_HEIGHT_MIN: "49px",
-    _ANIM_DURATION: 100,
     
     /**
      * Use main layout and set views

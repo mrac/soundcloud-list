@@ -205,31 +205,140 @@ function(app, Track, PlaylistTracks) {
     },
     
     /**
-     * Play audio by track id.
+     * Replay SoundCloud track by id.
+     * @param {String}    trackId
+     * @param {Boolean}   doPause
      */
-    playById: function(trackId) {
-      this.collection.playById(trackId);
+    replayById: function(trackId, doPause) {
+      var thisCollection = this.collection;
+      var track = this.collection.getTrackFromId(trackId);
+      track.trigger("playselect");
+      console.log(trackId + " playselect");
+      
+      // Stop currently playing track.
+      var prevTrackId = track.getCurrentTrackId();
+      var prevSound = track.getCurrentSound();
+      var prevTrack;
+      if(prevSound && prevTrackId) {
+        prevTrack = thisCollection.getTrackFromId(prevTrackId);
+        prevSound.stop();
+      }
+      
+      SC.whenStreamingReady(function() {
+        track.trigger("playready");
+        console.log(trackId + " playready");
+        SC.stream("/tracks/"+trackId, function(sound, err) {
+          if(!err) {
+            track.trigger("playresolve", trackId, sound);
+            console.log(trackId + " playresolve");
+            
+            // Start new track.
+            sound.play({
+              onconnect: function() {
+                track.trigger("playconnect", trackId);
+                console.log(trackId + " playconnect");
+              },
+              onid3: function() {
+                track.trigger("playid3", trackId);
+                console.log(trackId + " playid3");
+              },
+              onload: function(success) {
+                track.trigger("playload", trackId, success);
+                console.log(trackId + " playload  (success: "+success+")");
+              },
+              onplay: function() {
+                track.trigger("playstart", trackId);
+                console.log(trackId + " playstart");
+              },
+              onpause: function() {
+                track.trigger("playpause", trackId);
+                console.log(trackId + " playpause");
+              },
+              onresume: function() {
+                track.trigger("playresume", trackId);
+                console.log(trackId + " playresume");
+              },
+              onsuspend: function() {
+                track.trigger("playsuspend", trackId);
+                console.log(trackId + " playsuspend");
+              },
+              onstop: function() {
+                track.trigger("playstop", trackId);
+                console.log(trackId + " playstop");
+              },
+              onfinish: function() {
+                track.trigger("playfinish", trackId);
+                console.log(trackId + " playfinish");
+              },
+              whileplaying: function() {
+                track.trigger("playing", trackId, this.position, this.duration);
+              },
+              whileloading: function() {
+                track.trigger("playloading", trackId, this.bytesLoaded, this.bytesTotal);
+              }
+            });
+            if(doPause) {
+              sound.pause();
+            }
+          } else {
+            track.trigger("playerror", trackId);
+            console.log(trackId + " playerror");
+            console.log("Error while trying to stream a track from SoundCloud: ", err);
+            alert("Error while trying to stream a track from SoundCloud");
+          }
+        });
+      }.bind(this));
     },
     
     /**
-     * Pause audio by track id.
+     * Play/resume track by id.
+     * @param {String} trackId
+     */
+    playById: function(trackId) {
+      var track = this.collection.getTrackFromId(trackId);
+      if(Track.currentSound && Track.currentTrackId && (Track.currentTrackId == trackId)) {
+        Track.currentSound.resume();
+      } else {
+        if(track) {
+          this.replayById(trackId);
+        } else {
+          app.router.navigate("", {trigger: false, replace: true});
+        }
+      }
+    },
+    
+    /**
+     * Pause/repause track by id.
+     * @param {String} trackId
      */
     pauseById: function(trackId) {
-      this.collection.pauseById(trackId);
+      var track = this.collection.getTrackFromId(trackId);
+      var doPause = true;
+      if(Track.currentSound && Track.currentTrackId && (Track.currentTrackId == trackId)) {
+        Track.currentSound.pause();
+      } else {
+        if(track) {
+          this.replayById(trackId, doPause);
+        } else {
+          app.router.navigate("", {trigger: false, replace: true});
+        }
+      }
     },
     
     /**
      * Add audio by track id.
      */
     addById: function(trackId) {
-      this.collection.addById(trackId);
+      // Add track to the collection and save it.
+      this.collection.addSaveById(trackId);
     },
     
     /**
      * Add audio by track path.
      */
     addByPath: function(trackPath) {
-      this.collection.addByPath(trackPath);
+      // Add track to the collection and save it.
+      this.collection.addSaveByPath(trackPath);
     },
     
     /**
