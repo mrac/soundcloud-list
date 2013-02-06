@@ -10,6 +10,10 @@ define([
 
 function(app, Playlist, Search) {
 
+  console.log = function(txt) {
+    $('#logo').before("<div style='font-size:7px'>"+txt+"</div>");
+  };
+
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
@@ -19,7 +23,6 @@ function(app, Playlist, Search) {
     TOP_SECTION_HEIGHT_MIN: "49px",
     ANIM_DURATION: 100,
 
-    
     routes: {
       // states
       "": "index",
@@ -32,12 +35,10 @@ function(app, Playlist, Search) {
     },
 
     initialize: function() {
-      // Create collections and fetch playlist from the storage.
-      this.searchItems = new Search.Collection();
-      this.playlistItems = new Playlist.Collection();
-      this.playlistItems.fetch();
-      this.playlistItems.sort();
-
+      // Create views.
+      this.searchListView = new Search.Views.List();
+      this.playlistListView = new Playlist.Views.List();
+      
       // Initializations.
       this.setViews();
       this.initSoundCloud();
@@ -77,12 +78,8 @@ function(app, Playlist, Search) {
     setViews: function() {
       app.useLayout("main-layout")
       .setViews({
-        ".search-container": new Search.Views.List({
-          collection: this.searchItems
-        }),
-        ".playlist-container": new Playlist.Views.List({
-          collection: this.playlistItems
-        })
+        ".search-container": this.searchListView,
+        ".playlist-container": this.playlistListView
       })
       .render();
     },
@@ -193,7 +190,7 @@ function(app, Playlist, Search) {
      * state
      */
     index: function() {
-      this.searchItems.reset();
+      this.searchListView.collection.reset();
     },
     
     /**
@@ -202,7 +199,7 @@ function(app, Playlist, Search) {
      */
     search: function(searchQuery) {
       searchQuery = searchQuery || "";
-      this.searchItems.search(decodeURIComponent(searchQuery));
+      this.searchListView.collection.search(decodeURIComponent(searchQuery));
     },
     
     /**
@@ -210,7 +207,7 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     play: function(trackId) {
-      this.playlistItems.playById(trackId);
+      this.playlistListView.collection.playById(trackId);
     },
     
     /**
@@ -218,7 +215,7 @@ function(app, Playlist, Search) {
      * @param {String} trackId
      */
     pause: function(trackId) {
-      this.playlistItems.pauseById(trackId);
+      this.playlistListView.collection.pauseById(trackId);
     },
     
     /**
@@ -229,10 +226,10 @@ function(app, Playlist, Search) {
       trackIdentifier = trackIdentifier && decodeURIComponent(trackIdentifier);
       if(trackIdentifier && trackIdentifier.match("/")) {
         // track path
-        this.playlistItems.addByPath(trackIdentifier);
+        this.playlistListView.collection.addByPath(trackIdentifier);
       } else {
         // track id
-        this.playlistItems.addById(trackIdentifier);
+        this.playlistListView.collection.addById(trackIdentifier);
       }
       app.router.navigate("", {trigger: false, replace: true});
     },

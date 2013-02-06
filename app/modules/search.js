@@ -14,8 +14,6 @@ function(app, Track, SearchTracks) {
 
   var Search = app.module();
   
-  Search.Collection = SearchTracks;  
-  
   /**
    * ======================================================================================================
    * Search item view.
@@ -87,6 +85,9 @@ function(app, Track, SearchTracks) {
     },
 
     initialize: function() {
+      // Initialize collection.
+      this.collection = new SearchTracks();
+      
       // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": function() {

@@ -15,9 +15,7 @@ function(app, Track, PlaylistTracks) {
   
   var Playlist = app.module();
   
-  
-  Playlist.Collection = PlaylistTracks;
-  
+    
   
   /**
    * ======================================================================================================
@@ -158,6 +156,12 @@ function(app, Track, PlaylistTracks) {
     },
     
     initialize: function() {
+      
+      // Fetch the collection and sort it.
+      this.collection = new PlaylistTracks();
+      this.collection.fetch();
+      this.collection.sort();
+      
       // Listen to collection events.
       this.listenTo(this.collection, {
         "reset": this.render,
