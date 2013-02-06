@@ -38,9 +38,10 @@ function(app) {
       }
       
       // Handle local events
-      this.on("play", this.playon);
-      this.on("pause", this.pause);
-      this.on("resume", this.playon);
+      this.on("playresolve", this.setnew);
+      this.on("playpause", this.pause);
+      this.on("playstart", this.playon);
+      this.on("playresume", this.playon);
       this.on("playfinish", this.playoff);
       this.on("playstop", this.playoff);
       this.on("playerror", this.pause);
@@ -113,10 +114,16 @@ function(app) {
     /**
      * eventhandler
      */
-    playon: function(trackId, sound) {
+    setnew: function(trackId, sound) {
       if(sound) {
         this._setCurrent(trackId, sound);
       }
+    },
+    
+    /**
+     * eventhandler
+     */
+    playon: function(trackId) {
       this.save({
         playing: true,
         paused: false
@@ -258,38 +265,79 @@ function(app) {
     replayById: function(trackId, doPause) {
       var thisCollection = this;
       var track = this.getTrackFromId(trackId);
+      track.trigger("playselect");
+      console.log(trackId + " playselect");
+      
+      // Stop currently playing track.
+      var prevTrackId = track.getCurrentTrackId();
+      var prevSound = track.getCurrentSound();
+      var prevTrack;
+      if(prevSound && prevTrackId) {
+        prevTrack = thisCollection.getTrackFromId(prevTrackId);
+        prevSound.stop();
+      }
+      
       SC.whenStreamingReady(function() {
+        track.trigger("playready");
+        console.log(trackId + " playready");
         SC.stream("/tracks/"+trackId, function(sound, err) {
           if(!err) {
-            // Stop currently playing track.
-            var prevTrackId = track.getCurrentTrackId();
-            var prevSound = track.getCurrentSound();
-            var prevTrack;
-            if(prevSound && prevTrackId) {
-              prevTrack = thisCollection.getTrackFromId(prevTrackId);
-              prevSound.stop();
-              if(prevTrack) {
-                prevTrack.trigger("playstop", trackId);
-              }
-            }
+            track.trigger("playresolve", trackId, sound);
+            console.log(trackId + " playresolve");
+            
             // Start new track.
             sound.play({
+              onconnect: function() {
+                track.trigger("playconnect", trackId);
+                console.log(trackId + " playconnect");
+              },
+              onid3: function() {
+                track.trigger("playid3", trackId);
+                console.log(trackId + " playid3");
+              },
+              onload: function(success) {
+                track.trigger("playload", trackId, success);
+                console.log(trackId + " playload  (success: "+success+")");
+              },
+              onplay: function() {
+                track.trigger("playstart", trackId);
+                console.log(trackId + " playstart");
+              },
+              onpause: function() {
+                track.trigger("playpause", trackId);
+                console.log(trackId + " playpause");
+              },
+              onresume: function() {
+                track.trigger("playresume", trackId);
+                console.log(trackId + " playresume");
+              },
+              onsuspend: function() {
+                track.trigger("playsuspend", trackId);
+                console.log(trackId + " playsuspend");
+              },
+              onstop: function() {
+                track.trigger("playstop", trackId);
+                console.log(trackId + " playstop");
+              },
               onfinish: function() {
                 track.trigger("playfinish", trackId);
+                console.log(trackId + " playfinish");
               },
               whileplaying: function() {
                 track.trigger("playing", trackId, this.position, this.duration);
+              },
+              whileloading: function() {
+                track.trigger("playloading", trackId, this.bytesLoaded, this.bytesTotal);
               }
             });
-            track.trigger("play", trackId, sound);
             if(doPause) {
               sound.pause();
-              track.trigger("pause", trackId);
             }
           } else {
+            track.trigger("playerror", trackId);
+            console.log(trackId + " playerror");
             console.log("Error while trying to stream a track from SoundCloud: ", err);
             alert("Error while trying to stream a track from SoundCloud");
-            track.trigger("playerror", trackId);
           }
         });
       }.bind(this));
@@ -303,7 +351,6 @@ function(app) {
       var track = this.getTrackFromId(trackId);
       if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
         Playlist.Track.currentSound.resume();
-        track.trigger("resume", trackId);
       } else {
         if(track) {
           this.replayById(trackId);
@@ -323,7 +370,6 @@ function(app) {
       if(Playlist.Track.currentSound && Playlist.Track.currentTrackId && (Playlist.Track.currentTrackId == trackId)) {
         Playlist.Track.currentSound.pause();
         track = this.getTrackFromId(trackId);
-        track.trigger("pause", trackId);
       } else {
         if(track) {
           this.replayById(trackId, doPause);
@@ -472,7 +518,7 @@ function(app) {
      * Before rendering the item view.
      */
     beforeRender: function() {
-      console.log(Date.now() + " - playlist-item view render");
+      //console.log(Date.now() + " - playlist-item view render");
     },
     
     /**
@@ -565,7 +611,7 @@ function(app) {
      * Insert item sub-views, before rendering the view.
      */
     beforeRender: function() {
-      console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER");
+      //console.log(Date.now() + " - PLAYLIST-LIST VIEW RENDER");
       this.updateText();
       this.collection.each(function(track) {
         this.insertView("ul", new Playlist.Views.Item({
