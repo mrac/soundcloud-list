@@ -9,7 +9,6 @@ define([
 function(app, Track) {
 
   /**
-   * ======================================================================================================
    * PlaylistTracks collection.
    * @constructor
    * @event               play
