@@ -182,6 +182,20 @@ function(app, Track, SearchTracks) {
     },
     
     /**
+     * Remove all tracks form the collection.
+     */
+    empty: function() {
+      this.collection.reset();
+    },
+    
+    /**
+     * Perform search.
+     */
+    search: function(query) {
+      this.collection.search(query);
+    },
+        
+    /**
      * eventhandler
      */
     goSearch: function() {

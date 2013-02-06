@@ -10,47 +10,57 @@ define([
 
 function(app, Playlist, Search) {
 
+  // Dev-mode console log.
   console.log = function(txt) {
     $('#logo').before("<div style='font-size:7px'>"+txt+"</div>");
   };
+  
+  
+  
 
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
-    // Must use either 'px' or '%' units.
-    topSectionHeight: "50%",
-    TOP_SECTION_HEIGHT_MAX: "50%",
-    TOP_SECTION_HEIGHT_MIN: "49px",
-    ANIM_DURATION: 100,
-
     routes: {
-      // states
-      "": "index",
-      "search/(:query)": "search",
-      "play/:track": "play",
-      "pause/:track": "pause",
+      // States.
+      "":                 "_index",
+      "search/(:query)":  "_search",
+      "play/:track":      "_play",
+      "pause/:track":     "_pause",
       
-      // actions
-      "add/:track": "add"
+      // Actions.
+      "add/:track":       "_add"
     },
 
     initialize: function() {
+      // Global events.
+      this.listenTo(app, {
+        "global:play":    this._goPlay,
+        "global:pause":   this._goPause
+      });
+      
       // Create views.
-      this.searchListView = new Search.Views.List();
-      this.playlistListView = new Playlist.Views.List();
+      this._searchListView = new Search.Views.List();
+      this._playlistListView = new Playlist.Views.List();
       
       // Initializations.
-      this.setViews();
-      this.initSoundCloud();
-      this.setGlobalEvents();
+      this._setViews();
+      this._initSoundCloud();
 
       // Mobile/tablets hacks.
-      this.initFastClick();
-      this.initViewsToggle();
-      this.setTouchClass();
-      this.fixIPhoneScrolling();
+      this._initFastClick();
+      this._initViewsToggle();
+      this._setTouchClass();
+      this._fixIPhoneScrolling();
     },
-
+      
+      
+      
+      
+      
+      
+    // =========================== PUBLIC =============================
+        
     /**
      * Shortcut for building a url.
      * @param {...} varargs       Variable number of arguments
@@ -64,65 +74,77 @@ function(app, Playlist, Search) {
     },
     
     /**
-     * Initialize SoundCloud SDK.
+     * Checks if the device is a smartphone.
      */
-    initSoundCloud: function() {
-      SC.initialize({
-        client_id: "YOUR_CLIENT_ID"
-      });
+    isMobile: function() {
+      // the below conditional css rule is created by @media tag in css file
+      // #mobile-detector { display: none}
+      // so here we can detect it
+      return ($('#mobile-detector').css('display') == "none");
     },
+    
+    /**
+     * Checks if the device has a touch-screen.
+     */
+    isTouchScreen: function() {
+      return !!('ontouchstart' in window) // works on most browsers 
+        || !!('onmsgesturechange' in window); // works on ie10
+    },
+    
+    
+    
 
+
+
+
+
+    // =========================== PROTECTED =============================
+    
+    // Must use either 'px' or '%' units.
+    _topSectionHeight: "50%",
+    _TOP_SECTION_HEIGHT_MAX: "50%",
+    _TOP_SECTION_HEIGHT_MIN: "49px",
+    _ANIM_DURATION: 100,
+    
     /**
      * Use main layout and set views
      */
-    setViews: function() {
+    _setViews: function() {
       app.useLayout("main-layout")
       .setViews({
-        ".search-container": this.searchListView,
-        ".playlist-container": this.playlistListView
+        ".search-container": this._searchListView,
+        ".playlist-container": this._playlistListView
       })
       .render();
     },
     
     /**
-     * Set global events.
+     * Initialize SoundCloud SDK.
      */
-    setGlobalEvents: function() {
-      this.listenTo(app, {
-        "global:play": this.goPlay,
-        "global:pause": this.goPause
+    _initSoundCloud: function() {
+      SC.initialize({
+        client_id: "YOUR_CLIENT_ID"
       });
     },
     
     /**
-     * Set event for toggling up/down the playlist/searchbox views.
+     * Fixes iPhone click delay.
      */
-    initViewsToggle: function() {
-      $(document).on("click", "#titlebar", this.slideSection.bind(this));
-    },
-    
-    /**
-     * Enable css filtering for touch devices.
-     */
-    setTouchClass: function() {
-      if(this.isTouchScreen()) {
-        $("#main").addClass("touch");
-      } else {
-        $("#main").addClass("no-touch");
-      }
+    _initFastClick: function() {
+      new FastClick(document.body);
     },
     
     /**
      * Slides top and bottom sections up and down.
      */
-    slideSection: function() {
+    _slideSection: function() {
       var topHeight, bottomHeight, topH, bottomH;
-      if(this.topSectionHeight === this.TOP_SECTION_HEIGHT_MAX) {
-        this.topSectionHeight = this.TOP_SECTION_HEIGHT_MIN;
+      if(this._topSectionHeight === this._TOP_SECTION_HEIGHT_MAX) {
+        this._topSectionHeight = this._TOP_SECTION_HEIGHT_MIN;
       } else {
-        this.topSectionHeight = this.TOP_SECTION_HEIGHT_MAX;
+        this._topSectionHeight = this._TOP_SECTION_HEIGHT_MAX;
       }
-      topHeight = this.topSectionHeight;
+      topHeight = this._topSectionHeight;
       if(topHeight.match(/px/)) {
         topH = topHeight.replace(/px/, "");
         bottomH = $(window).height() - topH;
@@ -139,26 +161,27 @@ function(app, Playlist, Search) {
     },
     
     /**
-     * Checks if the device is a smartphone.
+     * Set event for toggling up/down the playlist/searchbox views.
      */
-    isMobile: function() {
-      // the below conditional css rule is created by @media tag in css file
-      // #mobile-detector { display: none}
-      // so here we can detect it
-      return ($('#mobile-detector').css('display') == "none");
+    _initViewsToggle: function() {
+      $(document).on("click", "#titlebar", this._slideSection.bind(this));
     },
     
     /**
-     * Fixes iPhone click delay.
+     * Enable css filtering for touch devices.
      */
-    initFastClick: function() {
-      new FastClick(document.body);
+    _setTouchClass: function() {
+      if(this.isTouchScreen()) {
+        $("#main").addClass("touch");
+      } else {
+        $("#main").addClass("no-touch");
+      }
     },
     
     /**
      * Prevents iPhone rubber effect while scrolling.
      */
-    fixIPhoneScrolling: function() {
+    _fixIPhoneScrolling: function() {
       // Scrollable elements should be marked via "scroll" class
       $(document).on("touchmove", ".scroll", function(ev) {
         if(this.offsetHeight === this.scrollHeight) {
@@ -177,76 +200,90 @@ function(app, Playlist, Search) {
         ev.preventDefault();
       });
     },
-
-    /**
-     * Checks if the device has a touch-screen.
-     */
-    isTouchScreen: function() {
-      return !!('ontouchstart' in window) // works on most browsers 
-        || !!('onmsgesturechange' in window); // works on ie10
-    },
     
+    
+    
+    
+    
+    // =========================== STATES =============================
+
     /**
      * state
      */
-    index: function() {
-      this.searchListView.collection.reset();
+    _index: function() {
+      this._searchListView.empty();
     },
     
     /**
      * state
      * @param {String} searchQuery
      */
-    search: function(searchQuery) {
+    _search: function(searchQuery) {
       searchQuery = searchQuery || "";
-      this.searchListView.collection.search(decodeURIComponent(searchQuery));
+      this._searchListView.search(decodeURIComponent(searchQuery));
     },
     
     /**
      * state
      * @param {String} trackId
      */
-    play: function(trackId) {
-      this.playlistListView.collection.playById(trackId);
+    _play: function(trackId) {
+      this._playlistListView.playById(trackId);
     },
     
     /**
      * state
      * @param {String} trackId
      */
-    pause: function(trackId) {
-      this.playlistListView.collection.pauseById(trackId);
+    _pause: function(trackId) {
+      this._playlistListView.pauseById(trackId);
     },
+    
+    
+
+
+
+
+
+    // =========================== ACTIONS =============================
     
     /**
      * action
      * @param {String} trackIdentifier
      */
-    add: function(trackIdentifier) {
+    _add: function(trackIdentifier) {
       trackIdentifier = trackIdentifier && decodeURIComponent(trackIdentifier);
       if(trackIdentifier && trackIdentifier.match("/")) {
         // track path
-        this.playlistListView.collection.addByPath(trackIdentifier);
+        this._playlistListView.addByPath(trackIdentifier);
       } else {
         // track id
-        this.playlistListView.collection.addById(trackIdentifier);
+        this._playlistListView.addById(trackIdentifier);
       }
       app.router.navigate("", {trigger: false, replace: true});
     },
         
+    
+    
+    
+    
+    // =========================== GLOBAL EVENT HANDLERS =============================
+    
     /**
      * global eventhandler
      */
-    goPlay: function(track) {
+    _goPlay: function(track) {
       app.router.go("play", track.id);
     },
     
     /**
      * global eventhandler
      */
-    goPause: function(track) {
+    _goPause: function(track) {
       app.router.go("pause", track.id);
     }
+    
+
     
     
   });

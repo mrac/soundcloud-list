@@ -205,6 +205,34 @@ function(app, Track, PlaylistTracks) {
     },
     
     /**
+     * Play audio by track id.
+     */
+    playById: function(trackId) {
+      this.collection.playById(trackId);
+    },
+    
+    /**
+     * Pause audio by track id.
+     */
+    pauseById: function(trackId) {
+      this.collection.pauseById(trackId);
+    },
+    
+    /**
+     * Add audio by track id.
+     */
+    addById: function(trackId) {
+      this.collection.addById(trackId);
+    },
+    
+    /**
+     * Add audio by track path.
+     */
+    addByPath: function(trackPath) {
+      this.collection.addByPath(trackPath);
+    },
+    
+    /**
      */
     dynamicRenderText: function() {
       this.$(".text").text(this.text || "");
