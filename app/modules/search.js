@@ -2,11 +2,11 @@ define([
   // Application.
   "app",
   
-  // Modules.
-  "modules/playlist"
+  // Models.
+  "models/track"
 ],
 
-function(app, Playlist) {
+function(app, Track) {
 
   var Search = app.module();
   
@@ -20,7 +20,7 @@ function(app, Playlist) {
    * @event               searcherror
    */
   Search.Collection = Backbone.Collection.extend({
-    model: Playlist.Track,
+    model: Track,
     
     /**
      * Search tracks in SoundCloud and add them to the collection.
@@ -68,7 +68,7 @@ function(app, Playlist) {
     serialize: function() {
       return {
         model: this.model,
-        defaultThumbnail: Playlist.Track.defaultThumbnail
+        defaultThumbnail: Track.defaultThumbnail
       };
     },
     
