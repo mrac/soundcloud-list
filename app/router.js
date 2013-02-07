@@ -10,14 +10,6 @@ define([
 
 function(app, Playlist, Search) {
 
-  // Dev-mode console log.
-  console.log = function(txt) {
-    $('#logo').before("<div style='font-size:7px'>"+txt+"</div>");
-  };
-  
-  
-  
-
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     
