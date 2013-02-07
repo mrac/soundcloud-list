@@ -35,7 +35,8 @@ function(app, Track, PlaylistTracks) {
     
     initialize: function() {
       this.listenTo(this.model, {
-        "change": this.dynamicRender
+        "change": this.dynamicRender,
+        "playsuspend": this.playSuspend
       });
     },
     
@@ -133,10 +134,37 @@ function(app, Track, PlaylistTracks) {
     /**
      * eventhandler
      */
+    playSuspend: function(track) {
+      if(Track.currentSound && !Track.currentSound.paused) {
+        this.dynamicRender({ playing: false, paused: true });
+        app.trigger("global:pause", this.model);
+      }
+    },
+    
+    /**
+     * eventhandler
+     */
     playing: function(track, position, duration) {
     }
     
-  });  
+  });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   /**
@@ -212,6 +240,8 @@ function(app, Track, PlaylistTracks) {
     replayById: function(trackId, doPause) {
       var thisCollection = this.collection;
       var track = this.collection.getTrackFromId(trackId);
+      var loadingOrPlaying = false;
+      
       track.trigger("playselect");
       console.log(trackId + " playselect");
       
@@ -228,6 +258,7 @@ function(app, Track, PlaylistTracks) {
         track.trigger("playready");
         console.log(trackId + " playready");
         SC.stream("/tracks/"+trackId, function(sound, err) {
+          var thisView = this;
           if(!err) {
             track.trigger("playresolve", trackId, sound);
             console.log(trackId + " playresolve");
@@ -259,8 +290,14 @@ function(app, Track, PlaylistTracks) {
                 console.log(trackId + " playresume");
               },
               onsuspend: function() {
-                track.trigger("playsuspend", trackId);
-                console.log(trackId + " playsuspend");
+                loadingOrPlaying = false;
+                setTimeout(function() {
+                  if(!loadingOrPlaying) {
+                    loadingOrPlaying = false;
+                    track.trigger("playsuspend", trackId);
+                    console.log(trackId + " playsuspended");
+                  }
+                }.bind(this), 2000);
               },
               onstop: function() {
                 track.trigger("playstop", trackId);
@@ -271,10 +308,14 @@ function(app, Track, PlaylistTracks) {
                 console.log(trackId + " playfinish");
               },
               whileplaying: function() {
+                loadingOrPlaying = true;
                 track.trigger("playing", trackId, this.position, this.duration);
+                //console.log(trackId + " playing  (position: " + this.position+", duration: "+this.duration+")");
               },
               whileloading: function() {
+                loadingOrPlaying = true;
                 track.trigger("playloading", trackId, this.bytesLoaded, this.bytesTotal);
+                //console.log(trackId + " playloading  (bytesLoaded: " + this.bytesLoaded+", bytesTotal: "+this.bytesTotal+")");
               }
             });
             if(doPause) {
@@ -286,7 +327,7 @@ function(app, Track, PlaylistTracks) {
             console.log("Error while trying to stream a track from SoundCloud: ", err);
             alert("Error while trying to stream a track from SoundCloud");
           }
-        });
+        }.bind(this));
       }.bind(this));
     },
     
