@@ -21,7 +21,8 @@ function(app) {
     defaults: {
       ordinal: "",
       playing: false,
-      paused: false
+      paused: false,
+      destroyed: false
     },
     
     initialize: function() {
@@ -116,37 +117,67 @@ function(app) {
      * eventhandler
      */
     playon: function(trackId) {
-      this.save({
-        playing: true,
-        paused: false
-      });
+      if(this.destroyed) {
+        this.set({
+          playing: true,
+          paused: false
+        });
+      } else {
+        this.save({
+          playing: true,
+          paused: false
+        });
+      }
     },
     
     /**
      * eventhandler
      */
     pause: function(trackId) {
-      this.save({
-        playing: false,
-        paused: true
-      });
+      if(this.destroyed) {
+        this.set({
+          playing: false,
+          paused: true
+        });
+      } else {
+        this.save({
+          playing: false,
+          paused: true
+        });
+      }
     },
 
     /**
      * eventhandler
      */
     playoff: function(trackId) {
-      this.save({
-        playing: false,
-        paused: false
-      });
+      if(this.destroyed) {
+        this.set({
+          playing: false,
+          paused: false
+        });
+      } else {
+        this.save({
+          playing: false,
+          paused: false
+        });
+      }
     },
     
     /**
      * eventhandler
      */
     playing: function(trackId, position, duration) {
+    },
+    
+    /**
+     * eventhandler
+     */
+    destroy: function() {
+      this.destroyed = true;
+      Backbone.Model.prototype.destroy.apply(this,arguments);
     }
+    
     
   }, {
 
