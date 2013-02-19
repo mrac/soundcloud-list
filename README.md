@@ -1,6 +1,6 @@
 # What is SoundCloud List ? #
 A simple web application for creating locally stored playlists of any audios provided by [SoundCloud](http://soundcloud.com).
-The app is supposed to work on both desktop browsers and iPhone/Android mobile and tablet devices.
+The app is supposed to work on both desktop browsers and iOS/Android mobile and tablet devices.
 
 # Application URL #
 http://mrac.github.com/soundcloud-list
