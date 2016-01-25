@@ -116,7 +116,7 @@ function(app, Playlist, Search) {
      */
     _initSoundCloud: function() {
       SC.initialize({
-        client_id: "YOUR_CLIENT_ID"
+        client_id: "3b1765cc25af2c8de26711c7bc9b3a43"
       });
     },
     
