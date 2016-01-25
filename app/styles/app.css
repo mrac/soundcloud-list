@@ -543,8 +543,9 @@ ul.playlist-items > li .item.paused .info-container .buttons button.active {
     margin-left: 12px;
 }
 
-
-
+.scroll {
+    -webkit-overflow-scrolling: touch;
+}
 
 
 
